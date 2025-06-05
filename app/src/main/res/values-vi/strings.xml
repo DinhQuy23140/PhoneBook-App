@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PhoneBook</string>
+    <string name="fragment_favorite">Mục ưa thích</string>
+    <string name="fragment_recent">Gần đây</string>
+    <string name="fragment_person">Danh bạ</string>
+    <string name="add_phone">Thêm số</string>
+</resources>
