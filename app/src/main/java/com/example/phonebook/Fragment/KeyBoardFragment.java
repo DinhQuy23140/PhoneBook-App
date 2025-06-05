@@ -1,14 +1,30 @@
 package com.example.phonebook.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.phonebook.Adapter.NumberAdapter;
+import com.example.phonebook.Interface.OnclickListener;
 import com.example.phonebook.R;
+import com.example.phonebook.Untilities.GridDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +37,13 @@ public class KeyBoardFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    TextView tvPhoneNumber, tvAdd;
+    ImageView ivDelete;
+    RecyclerView rvKeyboard;
+    NumberAdapter numberAdapter;
+    List<String> listNumber = new ArrayList<>();
+    String number = "";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -62,5 +85,70 @@ public class KeyBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_key_board, container, false);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        tvAdd = view.findViewById(R.id.tv_add_phone);
+        tvPhoneNumber = view.findViewById(R.id.tv_phonenumber_display);
+        rvKeyboard = view.findViewById(R.id.rv_keyboard);
+        int numCol = 3;
+        rvKeyboard.setLayoutManager(new GridLayoutManager(getContext(), numCol));
+        rvKeyboard.addItemDecoration(new GridDecoration(numCol, 30));
+        listNumber.addAll(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"));
+        numberAdapter = new NumberAdapter(getContext(), listNumber, new OnclickListener() {
+            @Override
+            public void onClick(int position) {
+                number += listNumber.get(position);
+                tvPhoneNumber.setText(number);
+                tvAdd.setVisibility(View.VISIBLE);
+                ivDelete.setVisibility(View.VISIBLE);
+            }
+        });
+        rvKeyboard.setAdapter(numberAdapter);
+        ivDelete = view.findViewById(R.id.iv_delete);
+        ivDelete.setOnClickListener(delete -> {
+            if (!number.isEmpty()) {
+                number = number.substring(0, number.length() - 1);
+                tvPhoneNumber.setText(number);
+                tvAdd.setVisibility(View.VISIBLE);
+                if (number.isEmpty()) {
+                    ivDelete.setVisibility(View.GONE);
+                    tvAdd.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        Handler handler = new Handler();
+        Runnable delete = new Runnable() {
+            @Override
+            public void run() {
+                if (!number.isEmpty()) {
+                    number = number.substring(0, number.length() - 1);
+                    tvPhoneNumber.setText(number);
+                    if (number.isEmpty()) {
+                        ivDelete.setVisibility(View.GONE);
+                        tvAdd.setVisibility(View.GONE);
+                    }
+                    handler.postDelayed(this, 100);
+                }
+            }
+        };
+
+        ivDelete.setOnLongClickListener(v -> {
+            handler.post(delete);
+            return false;
+        });
+
+        ivDelete.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP ||
+                    event.getAction() == MotionEvent.ACTION_CANCEL ||
+                    event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    handler.removeCallbacks(delete);
+            }
+            return false;
+        });
     }
 }

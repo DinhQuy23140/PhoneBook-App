@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-//        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
-//            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(0, 0, 0, systemInsets.bottom);
-//            return insets;
-//        });
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
+            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, 0, 0, systemInsets.bottom);
+            return insets;
+        });
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.bottom_star) {
