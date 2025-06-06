@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="menu_icon">#959393</color>
     <color name="menu_icon_selected">#5C96D3</color>
+    <color name="bg_search_person">#C3C1C1</color>
 </resources>
