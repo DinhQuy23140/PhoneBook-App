@@ -5,6 +5,37 @@
     <string name="fragment_recent">Recent Calls</string>
     <string name="fragment_person">Contacts Lists</string>
     <string name="add_phone">Add phone</string>
+    <string name="add_contact_title">New contact</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="complete">Complete</string>
+    <string name="add_image">Add Image</string>
+
+
+    <!-- att user -->
+    <string name="contact_first_name">First Name</string>
+    <string name="contact_last_name">Last Name</string>
+    <string name="contact_company">Company</string>
+    <string name="contact_phone">Phone</string>
+    <string name="contact_email">Email</string>
+    <string name="contact_url">URL</string>
+    <string name="contact_dob">Date of Birth</string>
+    <string name="contact_nickname">Nickname</string>
+    <string name="contact_social">Social</string>
+    <string name="contact_message">Message</string>
+    <string name="contact_address">Address</string>
+    <string name="add_phone_number">Add phone number</string>
+    <string name="add_email">Add email</string>
+    <string name="add_nickname">Add nick name</string>
+    <string name="add_url">Add URL</string>
+    <string name="add_address">Add Address</string>
+    <string name="add_dov">Add Date of Birth</string>
+    <string name="add_social">Add Social</string>
+    <string name="add_message">Add Message</string>
+
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

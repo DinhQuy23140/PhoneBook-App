@@ -80,7 +80,6 @@ public class AddContactFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemPhone = inflater.inflate(R.layout.child_item,null);
             TextView tvInput = itemPhone.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_phone));
             ImageView ivDelete = itemPhone.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerPhone.removeView(itemPhone);
@@ -93,8 +92,6 @@ public class AddContactFragment extends Fragment {
         ivAddEmail.setOnClickListener(addEmail -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemEmail = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemEmail.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_email));
             ImageView ivDelete = itemEmail.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerEmail.removeView(itemEmail);
@@ -107,8 +104,6 @@ public class AddContactFragment extends Fragment {
         ivAddNickname.setOnClickListener(addNickname -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemNickname = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemNickname.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_nickname));
             ImageView ivDelete = itemNickname.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerNickname.removeView(itemNickname);
@@ -121,8 +116,6 @@ public class AddContactFragment extends Fragment {
         ivAddURL.setOnClickListener(addURL -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemURL = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemURL.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_url));
             ImageView ivDelete = itemURL.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerURL.removeView(itemURL);
@@ -135,8 +128,6 @@ public class AddContactFragment extends Fragment {
         ivAddAddress.setOnClickListener(addAddress -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemAddress = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemAddress.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_address));
             ImageView ivDelete = itemAddress.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerAddress.removeView(itemAddress);
@@ -149,8 +140,6 @@ public class AddContactFragment extends Fragment {
         ivAddDoB.setOnClickListener(addDoB -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemDoB = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemDoB.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_dob));
             ImageView ivDelete = itemDoB.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerDoB.removeView(itemDoB);
@@ -163,8 +152,6 @@ public class AddContactFragment extends Fragment {
         ivAddSocial.setOnClickListener(addSocial -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemSocial = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemSocial.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_social));
             ImageView ivDelete = itemSocial.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerSocial.removeView(itemSocial);
@@ -177,8 +164,6 @@ public class AddContactFragment extends Fragment {
         ivAddMessage.setOnClickListener(addMessage -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View itemMessage = inflater.inflate(R.layout.child_item, null);
-            TextView tvInput = itemMessage.findViewById(R.id.et_input_att);
-            tvInput.setHint(getString(R.string.contact_message));
             ImageView ivDelete = itemMessage.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> {
                 containerMessage.removeView(itemMessage);

@@ -5,4 +5,34 @@
     <string name="fragment_recent">Gần đây</string>
     <string name="fragment_person">Danh bạ</string>
     <string name="add_phone">Thêm số</string>
+    <string name="add_contact_title">Liên hệ mới</string>
+
+    <string name="cancel">Hủy</string>
+    <string name="complete">Xong</string>
+    <string name="add_image">Thêm ảnh</string>
+
+
+
+    <!-- att user -->
+    <string name="contact_first_name">Họ</string>
+    <string name="contact_last_name">Tên</string>
+    <string name="contact_company">Công ty</string>
+    <string name="contact_phone">Số điện thoại</string>
+    <string name="contact_email">Email</string>
+    <string name="contact_url">URL</string>
+    <string name="contact_dob">Ngày sinh</string>
+    <string name="contact_nickname">Tên liên quan</string>
+    <string name="contact_social">Hồ sơ xã hội</string>
+    <string name="contact_message">Tin nhắn nhanh</string>
+    <string name="contact_address">Địa chỉ</string>
+    <string name="add_phone_number">Thêm số điện thoại</string>
+    <string name="add_email">Thêm email</string>
+    <string name="add_nickname">Thêm tên liên quan</string>
+    <string name="add_url">Thêm URL</string>
+    <string name="add_address">Thêm địa chỉ</string>
+    <string name="add_dov">Thêm ngày sinh</string>
+    <string name="add_social">Thêm hồ sơ xã hội</string>
+    <string name="add_message">Thêm tin nhắn nhanh</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
