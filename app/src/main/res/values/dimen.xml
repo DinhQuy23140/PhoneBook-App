@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_content">16sp</dimen>
     <dimen name="padding_left">15dp</dimen>
     <dimen name="padding_right">15dp</dimen>
     <dimen name="padding_top">15dp</dimen>
