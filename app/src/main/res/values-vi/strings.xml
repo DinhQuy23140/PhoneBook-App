@@ -25,6 +25,7 @@
     <string name="contact_social">Hồ sơ xã hội</string>
     <string name="contact_message">Tin nhắn nhanh</string>
     <string name="contact_address">Địa chỉ</string>
+    <string name="contact_note">Ghi chú</string>
     <string name="add_phone_number">Thêm số điện thoại</string>
     <string name="add_email">Thêm email</string>
     <string name="add_nickname">Thêm tên liên quan</string>
