@@ -7,13 +7,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.phonebook.Adapter.ContactAdapter;
+import com.example.phonebook.Interface.OnclickListener;
+import com.example.phonebook.Model.Contact;
 import com.example.phonebook.R;
+import com.example.phonebook.Repository.ContactRepository;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +35,10 @@ public class PersonFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     ImageView ivPerson;
+    RecyclerView rvContact;
+    ContactAdapter contactAdapter;
+    ContactRepository contactRepository;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -73,12 +85,24 @@ public class PersonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        contactRepository = new ContactRepository(getContext());
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_container, new AddContactFragment());
             fragmentTransaction.commit();
+        });
+        rvContact = view.findViewById(R.id.rv_contact);
+        rvContact.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        contactRepository.getAllContacts(result -> {
+            contactAdapter = new ContactAdapter(getContext(), result, new OnclickListener() {
+                @Override
+                public void onClick(int position) {
+
+                }
+            });
+            rvContact.setAdapter(contactAdapter);
         });
     }
 }

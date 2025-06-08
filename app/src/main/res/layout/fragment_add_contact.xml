@@ -530,6 +530,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_top"
+                    android:layout_marginBottom="@dimen/margin_bottom"
                     android:background="@color/white"
                     android:orientation="vertical">
 
@@ -537,13 +538,14 @@
                         android:id="@+id/layout_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tv_add_note"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:hint="@string/contact_note"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/>
+                        android:layout_height="100dp"
+                        android:hint="@string/contact_note" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
