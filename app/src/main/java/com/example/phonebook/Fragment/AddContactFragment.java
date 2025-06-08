@@ -12,11 +12,15 @@ import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.phonebook.DAO.ContactDAO;
+import com.example.phonebook.Model.Contact;
 import com.example.phonebook.R;
+import com.example.phonebook.Repository.ContactRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +36,9 @@ public class AddContactFragment extends Fragment {
     LinearLayout containerPhone, containerEmail, containerNickname, containerURL, containerAddress, containerDoB, containerSocial, containerMessage;
     ImageView ivAddPhone, ivAddEmail, ivAddNickname, ivAddURL, ivAddAddress, ivAddDoB, ivAddSocial, ivAddMessage;
     TextView tvAddCanel, tvAddComplete;
+    EditText edtFirstName, edtLastName, edtNote;
+    ContactRepository contactRepository;
+    ContactDAO contactDAO;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,11 +92,9 @@ public class AddContactFragment extends Fragment {
             fragmentManager.popBackStack();
         });
 
-        tvAddComplete = view.findViewById(R.id.tv_addcontact_complete);
-        tvAddComplete.setOnClickListener(complete -> {
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            fragmentManager.popBackStack();
-        });
+        edtFirstName = view.findViewById(R.id.et_add_first_name);
+        edtLastName = view.findViewById(R.id.et_add_last_name);
+        edtNote = view.findViewById(R.id.et_add_company);
 
         containerPhone = view.findViewById(R.id.layout_phone);
         ivAddPhone = view.findViewById(R.id.add_btn_addphone);
@@ -137,6 +142,18 @@ public class AddContactFragment extends Fragment {
         ivAddMessage = view.findViewById(R.id.add_btn_addmessage);
         ivAddMessage.setOnClickListener(addMessage -> {
             addAttribute(containerMessage, R.string.contact_message);
+        });
+
+        tvAddComplete = view.findViewById(R.id.tv_addcontact_complete);
+        tvAddComplete.setOnClickListener(complete -> {
+//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//            fragmentManager.popBackStack();
+            String firstName = edtFirstName.getText().toString();
+            String lastName = edtLastName.getText().toString();
+            String note = edtNote.getText().toString();
+            Contact contact = new Contact(note, firstName, lastName, note);
+            contactRepository = new ContactRepository(getContext());
+            contactRepository.insertContact(contact);
         });
     }
 
