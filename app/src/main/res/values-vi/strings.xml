@@ -34,6 +34,9 @@
     <string name="add_dov">Thêm ngày sinh</string>
     <string name="add_social">Thêm hồ sơ xã hội</string>
     <string name="add_message">Thêm tin nhắn nhanh</string>
+    <string name="contact_title">Liên hệ</string>
+    <string name="add_success">Thêm liên hệ thành công</string>
+    <string name="add_error">Có lỗi xảy ra</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

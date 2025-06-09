@@ -8,22 +8,21 @@ import androidx.room.PrimaryKey;
 public class PhoneNumber {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String contactId;
+    private long contactId;
     private String number;
     private String type;
 
-    public PhoneNumber(String contactId, int id, String number, String type) {
+    public PhoneNumber(long contactId, String number, String type) {
         this.contactId = contactId;
-        this.id = id;
         this.number = number;
         this.type = type;
     }
 
-    public String getContactId() {
+    public long getContactId() {
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    public void setContactId(long contactId) {
         this.contactId = contactId;
     }
 

@@ -16,11 +16,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phonebook.DAO.ContactDAO;
+import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
+import com.example.phonebook.Model.DOB;
+import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Message;
+import com.example.phonebook.Model.NickName;
+import com.example.phonebook.Model.PhoneNumber;
+import com.example.phonebook.Model.Social;
+import com.example.phonebook.Model.URL;
 import com.example.phonebook.R;
 import com.example.phonebook.Repository.ContactRepository;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -146,22 +163,76 @@ public class AddContactFragment extends Fragment {
 
         tvAddComplete = view.findViewById(R.id.tv_addcontact_complete);
         tvAddComplete.setOnClickListener(complete -> {
-//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//            fragmentManager.popBackStack();
             String firstName = edtFirstName.getText().toString();
             String lastName = edtLastName.getText().toString();
             String note = edtNote.getText().toString();
             Contact contact = new Contact(note, firstName, lastName, note);
             contactRepository = new ContactRepository(getContext());
-            contactRepository.insertContact(contact);
+            contactRepository.insertContact(contact, id -> {
+                Toast.makeText(requireContext(), "id " + id, Toast.LENGTH_SHORT).show();
+                //phone number
+                List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
+                Toast.makeText(getContext(), "Size " + listPhone.size(), Toast.LENGTH_SHORT).show();
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertPhoneNumber(listPhone);
+                });
+
+                //email
+                List<Email> listEmail = getListType(id, containerEmail, Email.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertEmail(listEmail);
+                });
+
+                //nickname
+                List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertNickName(listNickname);
+                });
+
+                //url
+                List<URL> listURL = getListType(id, containerURL, URL.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertURL(listURL);
+                });
+
+                //address
+                List<Address> listAddress = getListType(id, containerAddress, Address.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertAddress(listAddress);
+                });
+
+                //DoB
+                List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertDoB(listDoB);
+                });
+
+                //Social
+                List<Social> listSocial = getListType(id, containerSocial, Social.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertSocial(listSocial);
+                });
+
+                //Message
+                List<Message> listMessage = getListType(id, containerMessage, Message.class);
+                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    contactRepository.insertMessage(listMessage);
+                });
+
+                Toast.makeText(getContext(),getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.popBackStack();
+            });
+
         });
     }
 
     private void addAttribute(LinearLayout container, int idHint) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View childItem = inflater.inflate(R.layout.child_item, null);
-        TextView tvInput = childItem.findViewById(R.id.et_input_att);
-        tvInput.setHint(getString(idHint));
+        TextView tvType = childItem.findViewById(R.id.child_type);
+        EditText edtInput = childItem.findViewById(R.id.et_input_att);
+        edtInput.setHint(getString(idHint));
         ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
         ivDelete.setOnClickListener(delete -> {
             container.removeView(childItem);
@@ -178,5 +249,22 @@ public class AddContactFragment extends Fragment {
         builder.setView(dialog);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private <T> List<T> getListType(long id,LinearLayout container, Class<T> clazz) {
+        List<T> listType = new ArrayList<>();
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View child = container.getChildAt(i);
+            String value = ((EditText) child.findViewById(R.id.et_input_att)).getText().toString().trim();
+            String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+            try {
+                Constructor<T> constructor = clazz.getConstructor(long.class, String.class, String.class);
+                listType.add(constructor.newInstance(id, value, type));
+            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
+                     java.lang.InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return listType;
     }
 }

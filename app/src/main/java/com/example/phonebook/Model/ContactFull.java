@@ -29,4 +29,7 @@ public class ContactFull {
 
     @Relation(parentColumn = "id", entityColumn = "contactId")
     public List<URL> urls;
+
+    @Relation(parentColumn = "id", entityColumn = "contactId")
+    public List<Address> addresses;
 }
