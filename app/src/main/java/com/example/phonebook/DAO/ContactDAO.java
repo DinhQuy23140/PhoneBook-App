@@ -9,7 +9,6 @@ import com.example.phonebook.Model.Contact;
 import java.util.List;
 
 @Dao
-
 public interface ContactDAO {
     @Query("SELECT * FROM contacts")
     List<Contact> getAllContacts();

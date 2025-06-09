@@ -1,33 +1,36 @@
 package com.example.phonebook.Room;
-
-import androidx.annotation.NonNull;
 import androidx.room.Database;
-import androidx.room.DatabaseConfiguration;
-import androidx.room.InvalidationTracker;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import com.example.phonebook.DAO.AddressDAO;
 import com.example.phonebook.DAO.ContactDAO;
+import com.example.phonebook.DAO.DoBDAO;
+import com.example.phonebook.DAO.EmailDAO;
+import com.example.phonebook.DAO.MessageDAO;
+import com.example.phonebook.DAO.NickNameDAO;
+import com.example.phonebook.DAO.PhoneNumberDAO;
+import com.example.phonebook.DAO.SocialDAO;
+import com.example.phonebook.DAO.URLDAO;
+import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
+import com.example.phonebook.Model.DOB;
+import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Message;
+import com.example.phonebook.Model.NickName;
+import com.example.phonebook.Model.PhoneNumber;
+import com.example.phonebook.Model.Social;
+import com.example.phonebook.Model.URL;
 
-@Database(entities = {Contact.class}, version = 1)
+@Database(entities = {Contact.class, PhoneNumber.class, Email.class, NickName.class, URL.class, Address.class, DOB.class, Social.class, Message.class}, version = 1)
 public abstract class AppDataBase extends RoomDatabase {
 
     public abstract ContactDAO contactDAO();
-    @Override
-    public void clearAllTables() {
-
-    }
-
-    @NonNull
-    @Override
-    protected SupportSQLiteOpenHelper createOpenHelper(@NonNull DatabaseConfiguration databaseConfiguration) {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    protected InvalidationTracker createInvalidationTracker() {
-        return null;
-    }
+    public abstract PhoneNumberDAO phoneNumberDAO();
+    public abstract EmailDAO emailDAO();
+    public abstract NickNameDAO nickNameDAO();
+    public abstract URLDAO urlDAO();
+    public abstract AddressDAO addressDAO();
+    public abstract DoBDAO dOBDAO();
+    public abstract SocialDAO socialDAO();
+    public abstract MessageDAO messageDAO();
 }

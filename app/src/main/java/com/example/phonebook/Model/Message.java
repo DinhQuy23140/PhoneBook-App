@@ -13,22 +13,22 @@ import androidx.room.PrimaryKey;
 public class Message {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String contactId;
+    private long contactId;
     private String number;
     private String type;
 
-    public Message(String contactId, int id, String number, String type) {
+    public Message(long contactId, int id, String number, String type) {
         this.contactId = contactId;
         this.id = id;
         this.number = number;
         this.type = type;
     }
 
-    public String getContactId() {
+    public long getContactId() {
         return contactId;
     }
 
-    public void setContactId(String contactId) {
+    public void setContactId(long contactId) {
         this.contactId = contactId;
     }
 

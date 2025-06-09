@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.phonebook.Adapter.ContactAdapter;
 import com.example.phonebook.Interface.OnclickListener;
@@ -38,6 +39,7 @@ public class PersonFragment extends Fragment {
     RecyclerView rvContact;
     ContactAdapter contactAdapter;
     ContactRepository contactRepository;
+    TextView tvCountContact;
 
 
     // TODO: Rename and change types of parameters
@@ -85,6 +87,7 @@ public class PersonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        tvCountContact = view.findViewById(R.id.tv_count_contact);
         contactRepository = new ContactRepository(getContext());
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {
@@ -96,13 +99,16 @@ public class PersonFragment extends Fragment {
         rvContact = view.findViewById(R.id.rv_contact);
         rvContact.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         contactRepository.getAllContacts(result -> {
-            contactAdapter = new ContactAdapter(getContext(), result, new OnclickListener() {
-                @Override
-                public void onClick(int position) {
+            if (!result.isEmpty()) {
+                contactAdapter = new ContactAdapter(getContext(), result, new OnclickListener() {
+                    @Override
+                    public void onClick(int position) {
 
-                }
-            });
-            rvContact.setAdapter(contactAdapter);
+                    }
+                });
+                tvCountContact.setText(String.format("%s %s", String.valueOf(contactAdapter.getItemCount()), getString(R.string.contact_title)));
+                rvContact.setAdapter(contactAdapter);
+            }
         });
     }
 }
