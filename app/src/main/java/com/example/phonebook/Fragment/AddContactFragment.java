@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,60 +170,58 @@ public class AddContactFragment extends Fragment {
             Contact contact = new Contact(note, firstName, lastName, note);
             contactRepository = new ContactRepository(getContext());
             contactRepository.insertContact(contact, id -> {
-                Toast.makeText(requireContext(), "id " + id, Toast.LENGTH_SHORT).show();
-                //phone number
-                List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
-                Toast.makeText(getContext(), "Size " + listPhone.size(), Toast.LENGTH_SHORT).show();
                 Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertPhoneNumber(listPhone);
-                });
+                    try {
+                        // Insert Phone Number
+                        List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
+                        contactRepository.insertPhoneNumber(listPhone);
 
-                //email
-                List<Email> listEmail = getListType(id, containerEmail, Email.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertEmail(listEmail);
-                });
+                        // Insert Email
+                        List<Email> listEmail = getListType(id, containerEmail, Email.class);
+                        Log.d("Insert", "Email size: " + listEmail.size());
+                        contactRepository.insertEmail(listEmail);
 
-                //nickname
-                List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertNickName(listNickname);
-                });
+                        // Insert NickName
+                        List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
+                        Log.d("Insert", "NickName size: " + listNickname.size());
+                        contactRepository.insertNickName(listNickname);
 
-                //url
-                List<URL> listURL = getListType(id, containerURL, URL.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertURL(listURL);
-                });
+                        // Insert URL
+                        List<URL> listURL = getListType(id, containerURL, URL.class);
+                        Log.d("Insert", "URL size: " + listURL.size());
+                        contactRepository.insertURL(listURL);
 
-                //address
-                List<Address> listAddress = getListType(id, containerAddress, Address.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertAddress(listAddress);
-                });
+                        // Insert Address
+//                        List<Address> listAddress = getListType(id, containerAddress, Address.class);
+//                        Log.d("Insert", "Address size: " + listAddress.size());
+//                        contactRepository.insertAddress(listAddress);
 
-                //DoB
-                List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertDoB(listDoB);
-                });
+                        // Insert DOB
+                        List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
+                        Log.d("Insert", "DOB size: " + listDoB.size());
+                        contactRepository.insertDoB(listDoB);
 
-                //Social
-                List<Social> listSocial = getListType(id, containerSocial, Social.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertSocial(listSocial);
-                });
+                        // Insert Social
+                        List<Social> listSocial = getListType(id, containerSocial, Social.class);
+                        Log.d("Insert", "Social size: " + listSocial.size());
+                        contactRepository.insertSocial(listSocial);
 
-                //Message
-                List<Message> listMessage = getListType(id, containerMessage, Message.class);
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    contactRepository.insertMessage(listMessage);
-                });
+                        // Insert Message
+                        List<Message> listMessage = getListType(id, containerMessage, Message.class);
+                        Log.d("Insert", "Message size: " + listMessage.size());
+                        contactRepository.insertMessage(listMessage);
 
-                Toast.makeText(getContext(),getString(R.string.add_success), Toast.LENGTH_SHORT).show();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.popBackStack();
+                        // UI Thread
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+                            requireActivity().getSupportFragmentManager().popBackStack();
+                        });
+                    } catch (Exception e) {
+                        Log.e("InsertError", "Lỗi khi insert các dữ liệu phụ: ", e);
+                    }
+                });
             });
+
 
         });
     }

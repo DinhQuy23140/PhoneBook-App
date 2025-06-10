@@ -69,51 +69,35 @@ public class ContactRepository {
     }
 
     public void insertPhoneNumber(List<PhoneNumber> phoneNumber) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            phoneNumberDAO.insertPhoneNumber(phoneNumber);
-        });
+        phoneNumberDAO.insertPhoneNumber(phoneNumber);
     }
 
     public void insertEmail(List<Email> email) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            emailDAO.insertEmail(email);
-        });
+        emailDAO.insertEmail(email);
     }
 
     public void insertNickName(List<NickName> nickName) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            nickNameDAO.insertNickName(nickName);
-        });
+        nickNameDAO.insertNickName(nickName);
     }
 
     public void insertURL(List<URL> url) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            urldao.insertURL(url);
-        });
+        urldao.insertURL(url);
     }
 
     public void insertAddress(List<Address> address) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            addressDAO.insertAddress(address);
-        });
+        addressDAO.insertAddress(address);
     }
 
     public void insertDoB(List<DOB> DoB) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            DOBDAO.insertDoB(DoB);
-        });
+        DOBDAO.insertDoB(DoB);
     }
 
     public void insertSocial(List<Social> social) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            socialDAO.insertSocial(social);
-        });
+        socialDAO.insertSocial(social);
     }
 
     public void insertMessage(List<Message> message) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            messageDAO.insertMessage(message);
-        });
+        messageDAO.insertMessage(message);
     }
 
     public void getAllContacts( CallBack callBack) {

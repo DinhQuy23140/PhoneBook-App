@@ -17,9 +17,8 @@ public class Message {
     private String number;
     private String type;
 
-    public Message(long contactId, int id, String number, String type) {
+    public Message(long contactId, String number, String type) {
         this.contactId = contactId;
-        this.id = id;
         this.number = number;
         this.type = type;
     }

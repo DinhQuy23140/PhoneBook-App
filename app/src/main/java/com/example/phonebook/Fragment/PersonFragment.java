@@ -97,7 +97,7 @@ public class PersonFragment extends Fragment {
             fragmentTransaction.commit();
         });
         rvContact = view.findViewById(R.id.rv_contact);
-        rvContact.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvContact.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         contactRepository.getAllContacts(result -> {
             if (!result.isEmpty()) {
                 contactAdapter = new ContactAdapter(getContext(), result, new OnclickListener() {
@@ -106,7 +106,7 @@ public class PersonFragment extends Fragment {
 
                     }
                 });
-                tvCountContact.setText(String.format("%s %s", String.valueOf(contactAdapter.getItemCount()), getString(R.string.contact_title)));
+                tvCountContact.setText(String.format("%s %s", contactAdapter.getItemCount(), getString(R.string.contact_title)));
                 rvContact.setAdapter(contactAdapter);
             }
         });
