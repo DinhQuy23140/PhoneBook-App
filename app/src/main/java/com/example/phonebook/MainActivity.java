@@ -20,6 +20,7 @@ import java.security.Key;
 
 public class MainActivity extends AppCompatActivity {
 
+    BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +31,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-//        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
-//            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(0, 0, 0, systemInsets.bottom);
-//            return insets;
-//        });
+        bottomNav = findViewById(R.id.bottom_navigation);
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.bottom_star) {
@@ -56,9 +52,19 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new KeyBoardFragment());
     }
 
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

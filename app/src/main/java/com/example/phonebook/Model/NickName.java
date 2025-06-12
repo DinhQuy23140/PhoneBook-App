@@ -17,9 +17,8 @@ public class NickName {
     private String number;
     private String type;
 
-    public NickName(long contactId, int id, String number, String type) {
+    public NickName(long contactId, String number, String type) {
         this.contactId = contactId;
-        this.id = id;
         this.number = number;
         this.type = type;
     }

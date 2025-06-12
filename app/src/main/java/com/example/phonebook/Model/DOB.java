@@ -17,9 +17,8 @@ public class DOB {
     private String number;
     private String type;
 
-    public DOB(long contactId, int id, String number, String type) {
+    public DOB(long contactId, String number, String type) {
         this.contactId = contactId;
-        this.id = id;
         this.number = number;
         this.type = type;
     }

@@ -17,9 +17,8 @@ public class Email {
     private String number;
     private String type;
 
-    public Email(long contactId, int id, String number, String type) {
+    public Email(long contactId, String number, String type) {
         this.contactId = contactId;
-        this.id = id;
         this.number = number;
         this.type = type;
     }
