@@ -1,9 +1,13 @@
 package com.example.phonebook.Repository;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Room;
 
+import com.example.phonebook.API.APIService;
+import com.example.phonebook.Client.AddressClient;
 import com.example.phonebook.DAO.AddressDAO;
 import com.example.phonebook.DAO.ContactDAO;
 import com.example.phonebook.DAO.DoBDAO;
@@ -20,6 +24,7 @@ import com.example.phonebook.Model.Email;
 import com.example.phonebook.Model.Message;
 import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
+import com.example.phonebook.Model.Province;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Room.AppDataBase;
@@ -28,6 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ContactRepository {
     ContactDAO contactDAO;
@@ -39,6 +48,7 @@ public class ContactRepository {
     DoBDAO DOBDAO;
     SocialDAO socialDAO;
     MessageDAO messageDAO;
+    MutableLiveData<List<Province>> listProvince = new MutableLiveData<>();
 
     public interface CallBack {
         void onSuccess(List<Contact> result);
@@ -100,10 +110,32 @@ public class ContactRepository {
         messageDAO.insertMessage(message);
     }
 
-    public void getAllContacts( CallBack callBack) {
+    public MutableLiveData<List<Province>> getListProvince() {
+        return listProvince;
+    }
+
+    public void getAllContacts(CallBack callBack) {
         List<Contact> result = new ArrayList<>();
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             callBack.onSuccess(contactDAO.getAllContacts());
+        });
+    }
+
+    public void getAddress() {
+        APIService apiService = AddressClient.getRetrofit().create(APIService.class);
+        Call<List<Province>> call = apiService.getProvinces(3);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Province>> call, Response<List<Province>> response) {
+                listProvince.setValue(response.body());
+                Log.d("success", "SUCCESS");
+            }
+
+            @Override
+            public void onFailure(Call<List<Province>> call, Throwable throwable) {
+                listProvince.setValue(new ArrayList<>());
+                Log.d("error", throwable.getMessage());
+            }
         });
     }
 }

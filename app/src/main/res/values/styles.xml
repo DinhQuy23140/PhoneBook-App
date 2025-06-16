@@ -13,4 +13,8 @@
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="MyHintAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>
