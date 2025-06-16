@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -141,7 +142,11 @@ public class AddContactFragment extends Fragment {
         containerAddress = view.findViewById(R.id.layout_address);
         ivAddAddress = view.findViewById(R.id.add_btn_addaddress);
         ivAddAddress.setOnClickListener(addAddress -> {
-            addAttribute(containerAddress, R.string.contact_address);
+//            addAttribute(containerAddress, R.string.contact_address);
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, new NewAddressFragment());
+            fragmentTransaction.commit();
         });
 
         containerDoB = view.findViewById(R.id.layout_dob);

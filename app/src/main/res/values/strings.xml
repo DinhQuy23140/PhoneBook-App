@@ -36,6 +36,10 @@
     <string name="contact_title">Contact</string>
     <string name="add_success">Add success</string>
     <string name="add_error">Add error</string>
+    <string name="address_add">Add address</string>
+    <string name="address_province">Province</string>
+    <string name="address_district">District</string>
+    <string name="address_ward">Ward</string>
     <string name="person_search">Search</string>
 
 
