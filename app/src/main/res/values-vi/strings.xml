@@ -40,6 +40,7 @@
     <string name="address_province">Tỉnh/Thành phố</string>
     <string name="address_district">Quận/Huyện</string>
     <string name="address_ward">Phường/Xã</string>
+    <string name="address_detail">Chi tiết</string>
     <string name="add_error">Có lỗi xảy ra</string>
     <string name="person_search">Tìm kiếm</string>
 

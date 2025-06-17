@@ -40,6 +40,7 @@
     <string name="address_province">Province</string>
     <string name="address_district">District</string>
     <string name="address_ward">Ward</string>
+    <string name="address_detail">Detail</string>
     <string name="person_search">Search</string>
 
 

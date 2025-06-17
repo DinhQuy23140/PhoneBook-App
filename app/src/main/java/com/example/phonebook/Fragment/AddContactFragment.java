@@ -143,10 +143,21 @@ public class AddContactFragment extends Fragment {
         ivAddAddress = view.findViewById(R.id.add_btn_addaddress);
         ivAddAddress.setOnClickListener(addAddress -> {
 //            addAttribute(containerAddress, R.string.contact_address);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frame_container, new NewAddressFragment());
-            fragmentTransaction.commit();
+//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.frame_container, new NewAddressFragment());
+//            fragmentTransaction.commit();
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View childItem = inflater.inflate(R.layout.address, null);
+            TextView tvType = childItem.findViewById(R.id.child_type);
+            ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
+            ivDelete.setOnClickListener(delete -> {
+                containerAddress.removeView(childItem);
+            });
+            LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
+            lnSelectTyp.setOnClickListener(show -> showDialog());
+            containerAddress.addView(childItem);
         });
 
         containerDoB = view.findViewById(R.id.layout_dob);
