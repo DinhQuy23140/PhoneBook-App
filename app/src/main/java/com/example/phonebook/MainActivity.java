@@ -10,61 +10,60 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.phonebook.Fragment.FavoriteFragment;
-import com.example.phonebook.Fragment.KeyBoardFragment;
-import com.example.phonebook.Fragment.PersonFragment;
-import com.example.phonebook.Fragment.RecentFragment;
+import com.example.phonebook.Favorite.FavoriteFragment;
+import com.example.phonebook.KeyBoard.KeyBoardFragment;
+import com.example.phonebook.Person.PersonFragment;
+import com.example.phonebook.Recent.RecentFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.security.Key;
 
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNav;
+
+    FavoriteFragment favoriteFragment = new FavoriteFragment();
+    RecentFragment recentFragment = new RecentFragment();
+    KeyBoardFragment keyBoardFragment = new KeyBoardFragment();
+    PersonFragment personFragment = new PersonFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
+
         bottomNav = findViewById(R.id.bottom_navigation);
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.bottom_star) {
-                replaceFragment(new FavoriteFragment());
+            int id = item.getItemId();
+            if (id == R.id.bottom_star) {
+                replaceFragment(favoriteFragment);
                 return true;
-            } else if (item.getItemId() == R.id.bottom_recent) {
-                replaceFragment(new RecentFragment());
+            } else if (id == R.id.bottom_recent) {
+                replaceFragment(recentFragment);
                 return true;
-            } else if (item.getItemId() == R.id.bottom_keyboard) {
-                replaceFragment(new KeyBoardFragment());
+            } else if (id == R.id.bottom_keyboard) {
+                replaceFragment(keyBoardFragment);
                 return true;
-            } else if (item.getItemId() == R.id.bottom_person) {
-                replaceFragment(new PersonFragment());
+            } else if (id == R.id.bottom_person) {
+                replaceFragment(personFragment);
                 return true;
             }
             return false;
         });
-        replaceFragment(new KeyBoardFragment());
-    }
 
-    @Override
-    public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+        replaceFragment(keyBoardFragment);
     }
 
     public void replaceFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, fragment)
+                .commit();
     }
 }

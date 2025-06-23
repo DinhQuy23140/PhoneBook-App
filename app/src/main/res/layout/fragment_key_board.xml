@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#7A5F5F"
     android:orientation="vertical"
-    tools:context=".Fragment.KeyBoardFragment">
+    tools:context=".KeyBoard.KeyBoardFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

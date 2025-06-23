@@ -39,7 +39,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         Contact contact = listContact.get(position);
         holder.tvNameContact.setText(contact.getFirstName() + " " + contact.getLastName());
+        holder.itemView.setOnClickListener(view -> onclickListener.onClick(position));
     }
+
+    public void setData(List<Contact> contacts) {
+        this.listContact = contacts;
+    }
+
 
     @Override
     public int getItemCount() {
