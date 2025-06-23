@@ -1,4 +1,4 @@
-package com.example.phonebook.Fragment;
+package com.example.phonebook.Person;
 
 import android.os.Bundle;
 
@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.phonebook.Adapter.ContactAdapter;
+import com.example.phonebook.AddContact.AddContactFragment;
 import com.example.phonebook.Interface.OnclickListener;
 import com.example.phonebook.Model.Contact;
 import com.example.phonebook.R;
 import com.example.phonebook.Repository.ContactRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,28 +89,36 @@ public class PersonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         tvCountContact = view.findViewById(R.id.tv_count_contact);
+        rvContact = view.findViewById(R.id.rv_contact);
+        rvContact.setLayoutManager(new LinearLayoutManager(getContext()));
+
         contactRepository = new ContactRepository(getContext());
+
+        // Adapter ban đầu với danh sách rỗng
+        contactAdapter = new ContactAdapter(getContext(), new ArrayList<>(), position -> {});
+        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
+
+        contactRepository.getAllContacts(result -> {
+            requireActivity().runOnUiThread(() -> {
+                List<Contact> safeResult = (result == null) ? new ArrayList<>() : result;
+
+                contactAdapter.setData(safeResult);
+                contactAdapter.notifyDataSetChanged();
+
+                tvCountContact.setText(String.format("%s %s", safeResult.size(), getString(R.string.contact_title)));
+            });
+        });
+        
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_container, new AddContactFragment());
+            fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
             fragmentTransaction.commit();
         });
-        rvContact = view.findViewById(R.id.rv_contact);
-        rvContact.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        contactRepository.getAllContacts(result -> {
-            if (!result.isEmpty()) {
-                contactAdapter = new ContactAdapter(getContext(), result, new OnclickListener() {
-                    @Override
-                    public void onClick(int position) {
-
-                    }
-                });
-                tvCountContact.setText(String.format("%s %s", contactAdapter.getItemCount(), getString(R.string.contact_title)));
-                rvContact.setAdapter(contactAdapter);
-            }
-        });
     }
+
 }

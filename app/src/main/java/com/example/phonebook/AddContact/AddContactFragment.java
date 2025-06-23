@@ -1,14 +1,12 @@
-package com.example.phonebook.Fragment;
+package com.example.phonebook.AddContact;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.phonebook.DAO.ContactDAO;
 import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Model.DOB;
@@ -37,8 +34,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
@@ -46,7 +41,7 @@ import java.util.concurrent.Executors;
  * Use the {@link AddContactFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddContactFragment extends Fragment {
+public class AddContactFragment extends Fragment implements AddContactContract.View {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,9 +50,8 @@ public class AddContactFragment extends Fragment {
     LinearLayout containerPhone, containerEmail, containerNickname, containerURL, containerAddress, containerDoB, containerSocial, containerMessage;
     ImageView ivAddPhone, ivAddEmail, ivAddNickname, ivAddURL, ivAddAddress, ivAddDoB, ivAddSocial, ivAddMessage;
     TextView tvAddCanel, tvAddComplete;
-    EditText edtFirstName, edtLastName, edtNote;
-    ContactRepository contactRepository;
-    ContactDAO contactDAO;
+    EditText edtFirstName, edtLastName, edtCompany, edtNote;
+    AddContactPresent addContactPresent;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -104,50 +98,31 @@ public class AddContactFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(view);
+        register();
 
-        tvAddCanel = view.findViewById(R.id.tv_addcontact_cancel);
         tvAddCanel.setOnClickListener(cancel -> {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             fragmentManager.popBackStack();
         });
 
-        edtFirstName = view.findViewById(R.id.et_add_first_name);
-        edtLastName = view.findViewById(R.id.et_add_last_name);
-        edtNote = view.findViewById(R.id.et_add_company);
-
-        containerPhone = view.findViewById(R.id.layout_phone);
-        ivAddPhone = view.findViewById(R.id.add_btn_addphone);
         ivAddPhone.setOnClickListener(addPhone -> {
             addAttribute(containerPhone, R.string.contact_phone);
         });
 
-        containerEmail = view.findViewById(R.id.layout_email);
-        ivAddEmail = view.findViewById(R.id.add_btn_addemail);
         ivAddEmail.setOnClickListener(addEmail -> {
             addAttribute(containerEmail, R.string.contact_email);
         });
 
-        containerNickname = view.findViewById(R.id.layout_nickname);
-        ivAddNickname = view.findViewById(R.id.add_btn_addnickname);
         ivAddNickname.setOnClickListener(addNickname -> {
             addAttribute(containerNickname, R.string.contact_nickname);
         });
 
-        containerURL = view.findViewById(R.id.layout_url);
-        ivAddURL = view.findViewById(R.id.add_btn_addurl);
         ivAddURL.setOnClickListener(addURL -> {
             addAttribute(containerURL, R.string.contact_url);
         });
 
-        containerAddress = view.findViewById(R.id.layout_address);
-        ivAddAddress = view.findViewById(R.id.add_btn_addaddress);
         ivAddAddress.setOnClickListener(addAddress -> {
-//            addAttribute(containerAddress, R.string.contact_address);
-//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.frame_container, new NewAddressFragment());
-//            fragmentTransaction.commit();
-
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View childItem = inflater.inflate(R.layout.address, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
@@ -160,14 +135,10 @@ public class AddContactFragment extends Fragment {
             containerAddress.addView(childItem);
         });
 
-        containerDoB = view.findViewById(R.id.layout_dob);
-        ivAddDoB = view.findViewById(R.id.add_btn_adddob);
         ivAddDoB.setOnClickListener(addDoB -> {
             addAttribute(containerDoB, R.string.contact_dob);
         });
 
-        containerSocial = view.findViewById(R.id.layout_social);
-        ivAddSocial = view.findViewById(R.id.add_btn_addsocial);
         ivAddSocial.setOnClickListener(addSocial -> {
             addAttribute(containerSocial, R.string.contact_social);
         });
@@ -178,68 +149,142 @@ public class AddContactFragment extends Fragment {
             addAttribute(containerMessage, R.string.contact_message);
         });
 
-        tvAddComplete = view.findViewById(R.id.tv_addcontact_complete);
         tvAddComplete.setOnClickListener(complete -> {
             String firstName = edtFirstName.getText().toString();
             String lastName = edtLastName.getText().toString();
+            String company = "";
             String note = edtNote.getText().toString();
             Contact contact = new Contact(note, firstName, lastName, note);
-            contactRepository = new ContactRepository(getContext());
-            contactRepository.insertContact(contact, id -> {
-                Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                    try {
-                        // Insert Phone Number
-                        List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
-                        contactRepository.insertPhoneNumber(listPhone);
+            addContactPresent.insertContact(contact, new ContactRepository.CallBackInsert() {
+                @Override
+                public void onSuccess(long id) {
+                    Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                        try {
+                            // Insert Phone Number
+                            List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
+                            addContactPresent.insertPhoneNumber(listPhone);
 
-                        // Insert Email
-                        List<Email> listEmail = getListType(id, containerEmail, Email.class);
-                        Log.d("Insert", "Email size: " + listEmail.size());
-                        contactRepository.insertEmail(listEmail);
+                            // Insert Email
+                            List<Email> listEmail = getListType(id, containerEmail, Email.class);
+                            addContactPresent.insertEmail(listEmail);
 
-                        // Insert NickName
-                        List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
-                        Log.d("Insert", "NickName size: " + listNickname.size());
-                        contactRepository.insertNickName(listNickname);
+                            // Insert NickName
+                            List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
+                            addContactPresent.insertNickName(listNickname);
 
-                        // Insert URL
-                        List<URL> listURL = getListType(id, containerURL, URL.class);
-                        Log.d("Insert", "URL size: " + listURL.size());
-                        contactRepository.insertURL(listURL);
+                            // Insert URL
+                            List<URL> listURL = getListType(id, containerURL, URL.class);
+                            addContactPresent.insertURL(listURL);
 
-                        // Insert Address
-//                        List<Address> listAddress = getListType(id, containerAddress, Address.class);
-//                        Log.d("Insert", "Address size: " + listAddress.size());
-//                        contactRepository.insertAddress(listAddress);
+                            // Insert Address
+                            List<Address> listAddress = getListType(id, containerAddress, Address.class);
+                            addContactPresent.insertAddress(listAddress);
 
-                        // Insert DOB
-                        List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
-                        Log.d("Insert", "DOB size: " + listDoB.size());
-                        contactRepository.insertDoB(listDoB);
+                            // Insert DoB
+                            List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
+                            addContactPresent.insertDoB(listDoB);
 
-                        // Insert Social
-                        List<Social> listSocial = getListType(id, containerSocial, Social.class);
-                        Log.d("Insert", "Social size: " + listSocial.size());
-                        contactRepository.insertSocial(listSocial);
+                            // Insert Social
+                            List<Social> listSocial = getListType(id, containerSocial, Social.class);
+                            addContactPresent.insertSocial(listSocial);
 
-                        // Insert Message
-                        List<Message> listMessage = getListType(id, containerMessage, Message.class);
-                        Log.d("Insert", "Message size: " + listMessage.size());
-                        contactRepository.insertMessage(listMessage);
+                            // Insert Message
+                            List<Message> listMessage = getListType(id, containerMessage, Message.class);
+                            addContactPresent.insertMessage(listMessage);
 
-                        // UI Thread
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
-                            requireActivity().getSupportFragmentManager().popBackStack();
-                        });
-                    } catch (Exception e) {
-                        Log.e("InsertError", "Lỗi khi insert các dữ liệu phụ: ", e);
-                    }
-                });
+//                            requireActivity().runOnUiThread(() -> {
+//                                Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+//                                requireActivity().getSupportFragmentManager().popBackStack();
+//                            });
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
             });
+//            contactRepository.insertContact(contact, id -> {
+//                Executors.newSingleThreadScheduledExecutor().execute(() -> {
+//                    try {
+//                        // Insert Phone Number
+//                        List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
+//                        contactRepository.insertPhoneNumber(listPhone);
+//
+//                        // Insert Email
+//                        List<Email> listEmail = getListType(id, containerEmail, Email.class);
+//                        Log.d("Insert", "Email size: " + listEmail.size());
+//                        contactRepository.insertEmail(listEmail);
+//
+//                        // Insert NickName
+//                        List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
+//                        Log.d("Insert", "NickName size: " + listNickname.size());
+//                        contactRepository.insertNickName(listNickname);
+//
+//                        // Insert URL
+//                        List<URL> listURL = getListType(id, containerURL, URL.class);
+//                        Log.d("Insert", "URL size: " + listURL.size());
+//                        contactRepository.insertURL(listURL);
+//
+//                        // Insert Address
+////                        List<Address> listAddress = getListType(id, containerAddress, Address.class);
+////                        Log.d("Insert", "Address size: " + listAddress.size());
+////                        contactRepository.insertAddress(listAddress);
+//
+//                        // Insert DOB
+//                        List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
+//                        Log.d("Insert", "DOB size: " + listDoB.size());
+//                        contactRepository.insertDoB(listDoB);
+//
+//                        // Insert Social
+//                        List<Social> listSocial = getListType(id, containerSocial, Social.class);
+//                        Log.d("Insert", "Social size: " + listSocial.size());
+//                        contactRepository.insertSocial(listSocial);
+//
+//                        // Insert Message
+//                        List<Message> listMessage = getListType(id, containerMessage, Message.class);
+//                        Log.d("Insert", "Message size: " + listMessage.size());
+//                        contactRepository.insertMessage(listMessage);
+//
+//                        // UI Thread
+//                        requireActivity().runOnUiThread(() -> {
+//                            Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+//                            requireActivity().getSupportFragmentManager().popBackStack();
+//                        });
+//                    } catch (Exception e) {
+//                        Log.e("InsertError", "Lỗi khi insert các dữ liệu phụ: ", e);
+//                    }
+//                });
+//            });
 
 
         });
+    }
+
+    private void initView(View view) {
+        tvAddCanel = view.findViewById(R.id.tv_addcontact_cancel);
+        edtFirstName = view.findViewById(R.id.et_add_first_name);
+        edtLastName = view.findViewById(R.id.et_add_last_name);
+        edtCompany = view.findViewById(R.id.et_add_company);
+        edtNote = view.findViewById(R.id.tv_add_note);
+
+        containerPhone = view.findViewById(R.id.layout_phone);
+        ivAddPhone = view.findViewById(R.id.add_btn_addphone);
+        containerEmail = view.findViewById(R.id.layout_email);
+        ivAddEmail = view.findViewById(R.id.add_btn_addemail);
+        containerNickname = view.findViewById(R.id.layout_nickname);
+        ivAddNickname = view.findViewById(R.id.add_btn_addnickname);
+        containerURL = view.findViewById(R.id.layout_url);
+        ivAddURL = view.findViewById(R.id.add_btn_addurl);
+        containerAddress = view.findViewById(R.id.layout_address);
+        ivAddAddress = view.findViewById(R.id.add_btn_addaddress);
+        containerDoB = view.findViewById(R.id.layout_dob);
+        ivAddDoB = view.findViewById(R.id.add_btn_adddob);
+        containerSocial = view.findViewById(R.id.layout_social);
+        ivAddSocial = view.findViewById(R.id.add_btn_addsocial);
+        tvAddComplete = view.findViewById(R.id.tv_addcontact_complete);
+    }
+
+    private void register() {
+        addContactPresent = new AddContactPresent(this, requireContext());
     }
 
     private void addAttribute(LinearLayout container, int idHint) {
@@ -265,7 +310,6 @@ public class AddContactFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
     private <T> List<T> getListType(long id,LinearLayout container, Class<T> clazz) {
         List<T> listType = new ArrayList<>();
         for (int i = 0; i < container.getChildCount(); i++) {
@@ -281,5 +325,18 @@ public class AddContactFragment extends Fragment {
             }
         }
         return listType;
+    }
+
+    @Override
+    public void addContactSuccess() {
+        requireActivity().runOnUiThread(() -> {
+            Toast.makeText(getContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+    }
+
+    @Override
+    public void addContactFail(String error) {
+        Toast.makeText(getContext(), getString(R.string.add_error), Toast.LENGTH_SHORT).show();
     }
 }

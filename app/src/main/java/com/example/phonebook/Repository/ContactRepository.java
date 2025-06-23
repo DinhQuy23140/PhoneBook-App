@@ -31,7 +31,6 @@ import com.example.phonebook.Room.AppDataBase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import retrofit2.Call;
@@ -59,7 +58,7 @@ public class ContactRepository {
     }
 
     public ContactRepository(Context context) {
-        AppDataBase appDataBase = Room.databaseBuilder(context, AppDataBase.class, "ContactDB.db").build();
+        AppDataBase appDataBase = Room.databaseBuilder(context.getApplicationContext(), AppDataBase.class, "ContactDB.db").build();
         this.contactDAO = appDataBase.contactDAO();
         this.phoneNumberDAO = appDataBase.phoneNumberDAO();
         this.emailDAO = appDataBase.emailDAO();
