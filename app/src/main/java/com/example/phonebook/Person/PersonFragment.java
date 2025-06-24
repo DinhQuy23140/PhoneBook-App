@@ -110,7 +110,7 @@ public class PersonFragment extends Fragment {
                 tvCountContact.setText(String.format("%s %s", safeResult.size(), getString(R.string.contact_title)));
             });
         });
-        
+
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

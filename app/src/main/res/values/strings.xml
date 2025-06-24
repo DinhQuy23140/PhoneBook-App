@@ -42,6 +42,8 @@
     <string name="address_ward">Ward</string>
     <string name="address_detail">Detail</string>
     <string name="person_search">Search</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_label">Label</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

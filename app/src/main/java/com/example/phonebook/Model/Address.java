@@ -16,14 +16,14 @@ public class Address {
     private String detail;
     private String district;
     private String province;
-    private String country;
+    private String ward;
 
-    public Address(long contactId, String country, String detail, String district, String province) {
+    public Address(long contactId, String detail, String district, String province, String ward) {
         this.contactId = contactId;
-        this.country = country;
         this.detail = detail;
         this.district = district;
         this.province = province;
+        this.ward = ward;
     }
 
     public long getContactId() {
@@ -34,12 +34,12 @@ public class Address {
         this.contactId = contactId;
     }
 
-    public String getCountry() {
-        return country;
+    public String getWard() {
+        return ward;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setWard(String ward) {
+        this.ward = ward;
     }
 
     public String getDetail() {

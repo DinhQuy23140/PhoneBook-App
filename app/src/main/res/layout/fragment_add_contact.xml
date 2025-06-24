@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_right"
             android:text="@string/complete"
-            android:textColor="@color/complete"
+            android:textColor="@color/empty"
             android:textSize="@dimen/text_size_content"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
