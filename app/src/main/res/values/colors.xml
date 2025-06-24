@@ -7,4 +7,6 @@
     <color name="bg_search_person">#C3C1C1</color>
     <color name="cancel">#D57777</color>
     <color name="complete">#5C96D3</color>
+    <color name="empty">#ABD2F6</color>
+    <color name="primary">#6BB4EBFF</color>
 </resources>
