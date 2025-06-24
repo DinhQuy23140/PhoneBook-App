@@ -19,6 +19,7 @@ import com.example.phonebook.DAO.SocialDAO;
 import com.example.phonebook.DAO.URLDAO;
 import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
+import com.example.phonebook.Model.ContactFull;
 import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
 import com.example.phonebook.Model.Message;
@@ -50,7 +51,7 @@ public class ContactRepository {
     MutableLiveData<List<Province>> listProvince = new MutableLiveData<>();
 
     public interface CallBack {
-        void onSuccess(List<Contact> result);
+        void onSuccess(List<ContactFull> result);
     }
 
     public interface CallBackInsert {

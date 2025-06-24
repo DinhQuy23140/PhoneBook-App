@@ -12,16 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.phonebook.Interface.OnclickListener;
 import com.example.phonebook.Model.Contact;
+import com.example.phonebook.Model.ContactFull;
 import com.example.phonebook.R;
 
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
     Context context;
-    List<Contact> listContact;
+    List<ContactFull> listContact;
     OnclickListener onclickListener;
 
-    public ContactAdapter(Context context, List<Contact> listContact, OnclickListener onclickListener) {
+    public ContactAdapter(Context context, List<ContactFull> listContact, OnclickListener onclickListener) {
         this.context = context;
         this.listContact = listContact;
         this.onclickListener = onclickListener;
@@ -37,12 +38,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        Contact contact = listContact.get(position);
-        holder.tvNameContact.setText(contact.getFirstName() + " " + contact.getLastName());
+        ContactFull contact = listContact.get(position);
+        holder.tvNameContact.setText(contact.contact.getFirstName() + " " + contact.contact.getLastName());
         holder.itemView.setOnClickListener(view -> onclickListener.onClick(position));
     }
 
-    public void setData(List<Contact> contacts) {
+    public void setData(List<ContactFull> contacts) {
         this.listContact = contacts;
     }
 
