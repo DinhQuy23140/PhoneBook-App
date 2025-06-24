@@ -1,4 +1,4 @@
-package com.example.phonebook.Person;
+package com.example.phonebook.Module.Person;
 
 import android.os.Bundle;
 
@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.phonebook.Adapter.ContactAdapter;
-import com.example.phonebook.AddContact.AddContactFragment;
-import com.example.phonebook.Interface.OnclickListener;
+import com.example.phonebook.Model.ContactFull;
+import com.example.phonebook.Module.AddContact.AddContactFragment;
 import com.example.phonebook.Model.Contact;
+import com.example.phonebook.Module.ContactDetail.ContactDetailFragment;
 import com.example.phonebook.R;
 import com.example.phonebook.Repository.ContactRepository;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,19 +99,40 @@ public class PersonFragment extends Fragment {
         contactRepository = new ContactRepository(getContext());
 
         // Adapter ban đầu với danh sách rỗng
-        contactAdapter = new ContactAdapter(getContext(), new ArrayList<>(), position -> {});
-        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
+//        contactAdapter = new ContactAdapter(getContext(), new ArrayList<>(), position -> {
+//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.frame_container, new ContactDetailFragment());
+//            fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
+//            fragmentTransaction.commit();
+//        });
+//        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
 
         contactRepository.getAllContacts(result -> {
             requireActivity().runOnUiThread(() -> {
-                List<Contact> safeResult = (result == null) ? new ArrayList<>() : result;
+                List<ContactFull> safeResult = (result == null) ? new ArrayList<>() : result;
 
-                contactAdapter.setData(safeResult);
-                contactAdapter.notifyDataSetChanged();
+//                contactAdapter.setData(safeResult);
+//                contactAdapter.notifyDataSetChanged();
 
+                contactAdapter = new ContactAdapter(getContext(), safeResult, position -> {
+                    ContactFull contactFull = safeResult.get(position);
+                    ContactDetailFragment contactDetailFragment = new ContactDetailFragment();
+                    Bundle bundle = new Bundle();
+                    Gson gson = new Gson();
+                    String strContactFull = gson.toJson(contactFull);
+                    bundle.putString("contact", strContactFull);
+                    contactDetailFragment.setArguments(bundle);
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_container, contactDetailFragment);
+                    fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
+                    fragmentTransaction.commit();
+                });
                 tvCountContact.setText(String.format("%s %s", safeResult.size(), getString(R.string.contact_title)));
             });
         });
+        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
 
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {

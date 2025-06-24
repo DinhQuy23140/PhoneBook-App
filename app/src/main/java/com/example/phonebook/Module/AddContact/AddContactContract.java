@@ -1,4 +1,4 @@
-package com.example.phonebook.AddContact;
+package com.example.phonebook.Module.AddContact;
 
 import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;

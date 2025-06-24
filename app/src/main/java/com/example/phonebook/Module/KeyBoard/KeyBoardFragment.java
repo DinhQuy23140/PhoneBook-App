@@ -1,4 +1,4 @@
-package com.example.phonebook.KeyBoard;
+package com.example.phonebook.Module.KeyBoard;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

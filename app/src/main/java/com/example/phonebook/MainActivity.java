@@ -8,12 +8,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.phonebook.Favorite.FavoriteFragment;
-import com.example.phonebook.KeyBoard.KeyBoardFragment;
-import com.example.phonebook.Person.PersonFragment;
-import com.example.phonebook.Recent.RecentFragment;
+import com.example.phonebook.Module.Favorite.FavoriteFragment;
+import com.example.phonebook.Module.KeyBoard.KeyBoardFragment;
+import com.example.phonebook.Module.Person.PersonFragment;
+import com.example.phonebook.Module.Recent.RecentFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
