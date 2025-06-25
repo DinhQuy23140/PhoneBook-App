@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phonebook.Adapter.AttrAdapter;
+import com.example.phonebook.Adapter.GenericAdapter;
 import com.example.phonebook.Model.ContactFull;
 import com.example.phonebook.Model.Email;
 import com.example.phonebook.Model.PhoneNumber;
@@ -100,25 +101,22 @@ public class ContactDetailFragment extends Fragment {
             Toast.makeText(getContext(), "Contact: " + fullName, Toast.LENGTH_SHORT).show();
 
             List<PhoneNumber> listPhoneNumber = contactFull.phones;
-            if (listPhoneNumber != null) {
-                List<String> convertPhoneNumber = new ArrayList<>();
-                for (PhoneNumber phone : listPhoneNumber) {
-                    String phoneNumber = phone.getType() + " " + phone.getNumber();
-                    convertPhoneNumber.add(phoneNumber);
-                }
-                AttrAdapter adapter = new AttrAdapter(getContext(), convertPhoneNumber);
-                rvContactNumber.setAdapter(adapter);
-            }
+            GenericAdapter<PhoneNumber> phoneAdapter = new GenericAdapter<PhoneNumber>(R.layout.item_attr, listPhoneNumber, ((itemView, phoneNumber,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(phoneNumber.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(phoneNumber.getNumber());
+            }));
+            rvContactNumber.setAdapter(phoneAdapter);
+
             List<Email> listEmail = contactFull.emails;
-            if (listEmail != null) {
-                List<String> convertEmail = new ArrayList<>();
-                for (Email email : listEmail) {
-                    String phoneNumber = email.getType() + " " + email.getNumber();
-                    convertEmail.add(phoneNumber);
-                }
-                AttrAdapter adapter = new AttrAdapter(getContext(), convertEmail);
-                rvContactEmail.setAdapter(adapter);
-            }
+            GenericAdapter<Email> emailAdapter = new GenericAdapter<Email>(R.layout.item_attr, listEmail, ((itemView, email,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(email.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(email.getNumber());
+            }));
+            rvContactEmail.setAdapter(emailAdapter);
         }
     }
 
