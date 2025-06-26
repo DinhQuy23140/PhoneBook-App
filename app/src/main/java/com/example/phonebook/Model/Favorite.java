@@ -3,13 +3,15 @@ package com.example.phonebook.Model;
 import androidx.room.Dao;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "favorite",
         foreignKeys = @ForeignKey(entity = Contact.class,
         parentColumns = "id",
         childColumns = "contactId",
-        onDelete = ForeignKey.CASCADE))
+        onDelete = ForeignKey.CASCADE),
+        indices = {@Index("contactId")})
 public class Favorite {
     @PrimaryKey(autoGenerate = true)
     int id;

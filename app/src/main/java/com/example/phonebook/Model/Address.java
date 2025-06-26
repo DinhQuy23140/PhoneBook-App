@@ -3,13 +3,15 @@ package com.example.phonebook.Model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "address",
         foreignKeys = @ForeignKey(entity = Contact.class,
                 parentColumns = "id",
                 childColumns = "contactId",
-                onDelete = ForeignKey.CASCADE))
+                onDelete = ForeignKey.CASCADE),
+        indices = {@Index("contactId")})
 public class Address {
     @PrimaryKey(autoGenerate = true)
     private long id;

@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ import com.example.phonebook.Model.Province;
 import com.example.phonebook.Model.Ward;
 import com.example.phonebook.R;
 import com.example.phonebook.Repository.ContactRepository;
-
 import java.util.List;
 
 /**
@@ -87,14 +85,14 @@ public class NewAddressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        contactRepository = new ContactRepository(getContext());
+        contactRepository = new ContactRepository(requireContext());
         atvProvince = view.findViewById(R.id.av_province);
         contactRepository.getAddress();
         contactRepository.getListProvince().observe(getViewLifecycleOwner(), listProvince -> {
             Toast.makeText(getContext(), "List Province: " + listProvince.size(), Toast.LENGTH_SHORT).show();
             if (!listProvince.isEmpty()) {
                 provinces = listProvince;
-                adapterProvince = new ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, provinces);
+                adapterProvince = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, provinces);
                 atvProvince.setAdapter(adapterProvince);
             }
         });
@@ -103,7 +101,7 @@ public class NewAddressFragment extends Fragment {
             Province province = (Province) parent.getItemAtPosition(position);
             nameProvince = province.getName();
             districts = province.getDistricts();
-            adapterDistrict = new ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, districts);
+            adapterDistrict = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, districts);
             atvDistrict.setAdapter(adapterDistrict);
         });
 
@@ -112,7 +110,7 @@ public class NewAddressFragment extends Fragment {
             District district = (District) parent.getItemAtPosition(position);
             nameDistrict = district.getName();
             wards = district.getWards();
-            adapterWard = new ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, wards);
+            adapterWard = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, wards);
             atvWard.setAdapter(adapterWard);
         });
 

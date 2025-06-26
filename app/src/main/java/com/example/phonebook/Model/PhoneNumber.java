@@ -2,9 +2,15 @@ package com.example.phonebook.Model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "phone_number", foreignKeys = @ForeignKey(entity = Contact.class, parentColumns = "id", childColumns = "contactId", onDelete = ForeignKey.CASCADE))
+@Entity(tableName = "phone_number",
+        foreignKeys = @ForeignKey(entity = Contact.class,
+                parentColumns = "id",
+                childColumns = "contactId",
+                onDelete = ForeignKey.CASCADE),
+        indices = {@Index("contactId")})
 public class PhoneNumber {
     @PrimaryKey(autoGenerate = true)
     private int id;
