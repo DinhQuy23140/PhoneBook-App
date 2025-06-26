@@ -12,9 +12,11 @@ import com.example.phonebook.DAO.AddressDAO;
 import com.example.phonebook.DAO.ContactDAO;
 import com.example.phonebook.DAO.DoBDAO;
 import com.example.phonebook.DAO.EmailDAO;
+import com.example.phonebook.DAO.FavoriteDAO;
 import com.example.phonebook.DAO.MessageDAO;
 import com.example.phonebook.DAO.NickNameDAO;
 import com.example.phonebook.DAO.PhoneNumberDAO;
+import com.example.phonebook.DAO.RecentDAO;
 import com.example.phonebook.DAO.SocialDAO;
 import com.example.phonebook.DAO.URLDAO;
 import com.example.phonebook.Model.Address;
@@ -22,10 +24,12 @@ import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Model.ContactFull;
 import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Favorite;
 import com.example.phonebook.Model.Message;
 import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Province;
+import com.example.phonebook.Model.Recent;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Room.AppDataBase;
@@ -48,6 +52,8 @@ public class ContactRepository {
     DoBDAO DOBDAO;
     SocialDAO socialDAO;
     MessageDAO messageDAO;
+    FavoriteDAO favoriteDAO;
+    RecentDAO recentDAO;
     MutableLiveData<List<Province>> listProvince = new MutableLiveData<>();
 
     public interface CallBack {
@@ -69,6 +75,8 @@ public class ContactRepository {
         this.DOBDAO = appDataBase.dOBDAO();
         this.socialDAO = appDataBase.socialDAO();
         this.messageDAO = appDataBase.messageDAO();
+        this.favoriteDAO = appDataBase.favoriteDAO();
+        this.recentDAO = appDataBase.recentDAO();
     }
 
     public void insertContact(Contact contact, CallBackInsert callBack) {
@@ -108,6 +116,10 @@ public class ContactRepository {
 
     public void insertMessage(List<Message> message) {
         messageDAO.insertMessage(message);
+    }
+
+    public void setFavorite(Favorite favorite) {
+        favoriteDAO.insertFavorite(favorite);
     }
 
     public MutableLiveData<List<Province>> getListProvince() {

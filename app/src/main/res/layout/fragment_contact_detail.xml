@@ -44,7 +44,7 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
-                                android:id="@+id/imageView"
+                                android:id="@+id/iv_detail_back"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleX="0.8"
@@ -53,7 +53,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <TextView
-                            android:id="@+id/textView2"
+                            android:id="@+id/tv_detail_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/margin_right"
@@ -280,6 +280,175 @@
                             android:id="@+id/rv_att_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_nickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_url"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_dob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_dob"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_social"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_social"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_att_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tv_attr_note"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:hint="@string/contact_note" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_func"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="@dimen/margin_top"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/bg_att_contact"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/contact_detail_sent_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:gravity="center|start"
+                            android:paddingLeft="@dimen/padding_left"
+                            android:text="@string/contact_detail_message"
+                            android:textColor="@color/complete"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@color/black"
+                            android:layout_marginStart="@dimen/margin_left"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/contact_detail_add_favo"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="@dimen/margin_top"
+                            android:gravity="center|start"
+                            android:paddingLeft="@dimen/padding_left"
+                            android:text="@string/contact_detail_add_favo"
+                            android:textColor="@color/complete"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@color/black"
+                            android:layout_marginStart="@dimen/margin_left"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/contact_detail_add_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="@dimen/margin_top"
+                            android:gravity="center|start"
+                            android:paddingLeft="@dimen/padding_left"
+                            android:text="@string/contact_detail_add_list"
+                            android:textColor="@color/complete"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

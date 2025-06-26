@@ -94,45 +94,33 @@ public class PersonFragment extends Fragment {
 
         tvCountContact = view.findViewById(R.id.tv_count_contact);
         rvContact = view.findViewById(R.id.rv_contact);
-        rvContact.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvContact.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        contactRepository = new ContactRepository(getContext());
-
-        // Adapter ban đầu với danh sách rỗng
-//        contactAdapter = new ContactAdapter(getContext(), new ArrayList<>(), position -> {
-//            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.frame_container, new ContactDetailFragment());
-//            fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
-//            fragmentTransaction.commit();
-//        });
-//        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
+        contactRepository = new ContactRepository(requireContext());
 
         contactRepository.getAllContacts(result -> {
             requireActivity().runOnUiThread(() -> {
-                List<ContactFull> safeResult = (result == null) ? new ArrayList<>() : result;
-
-//                contactAdapter.setData(safeResult);
-//                contactAdapter.notifyDataSetChanged();
-
-                contactAdapter = new ContactAdapter(getContext(), safeResult, position -> {
-                    ContactFull contactFull = safeResult.get(position);
-                    ContactDetailFragment contactDetailFragment = new ContactDetailFragment();
-                    Bundle bundle = new Bundle();
-                    Gson gson = new Gson();
-                    String strContactFull = gson.toJson(contactFull);
-                    bundle.putString("contact", strContactFull);
-                    contactDetailFragment.setArguments(bundle);
-                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_container, contactDetailFragment);
-                    fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
-                    fragmentTransaction.commit();
-                });
-                tvCountContact.setText(String.format("%s %s", safeResult.size(), getString(R.string.contact_title)));
+//                List<ContactFull> safeResult = (result == null) ? new ArrayList<>() : result;
+                if (result != null) {
+                    contactAdapter = new ContactAdapter(getContext(), result, position -> {
+                        ContactFull contactFull = result.get(position);
+                        ContactDetailFragment contactDetailFragment = new ContactDetailFragment();
+                        Bundle bundle = new Bundle();
+                        Gson gson = new Gson();
+                        String strContactFull = gson.toJson(contactFull);
+                        bundle.putString("contact", strContactFull);
+                        contactDetailFragment.setArguments(bundle);
+                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame_container, contactDetailFragment);
+                        fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
+                        fragmentTransaction.commit();
+                    });
+                    rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
+                    tvCountContact.setText(String.format("%s %s", result.size(), getString(R.string.contact_title)));
+                }
             });
         });
-        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
 
         ivPerson = view.findViewById(R.id.iv_add_contact);
         ivPerson.setOnClickListener(addContact -> {

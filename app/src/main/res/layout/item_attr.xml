@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_left"
-        android:layout_marginTop="@dimen/margin_top"
-        android:text="TextView"
+        android:layout_marginTop="10dp"
+        android:text="Title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_left"
-        android:layout_marginTop="@dimen/margin_top"
-        android:text="TextView"
+        android:layout_marginTop="10dp"
+        android:text="Value"
         android:textColor="@color/complete"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +32,12 @@
         android:layout_height="0.5dp"
         android:layout_marginStart="@dimen/margin_left"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
         android:background="#050505"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_attr_value"></LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

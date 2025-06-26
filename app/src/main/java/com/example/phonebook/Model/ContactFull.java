@@ -32,4 +32,10 @@ public class ContactFull {
 
     @Relation(parentColumn = "id", entityColumn = "contactId")
     public List<Address> addresses;
+
+    @Relation(parentColumn = "id", entityColumn = "contactId")
+    public List<Favorite> favorites;
+
+    @Relation(parentColumn = "id", entityColumn = "contactId")
+    public List<Recent> recents;
 }

@@ -1,14 +1,17 @@
 package com.example.phonebook.Model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "address",
         foreignKeys = @ForeignKey(entity = Contact.class,
                 parentColumns = "id",
                 childColumns = "contactId",
-                onDelete = ForeignKey.CASCADE))
+                onDelete = ForeignKey.CASCADE),
+        indices = {@Index("contactId")})
 public class Address {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -17,12 +20,14 @@ public class Address {
     private String district;
     private String province;
     private String ward;
+    private String type;
 
-    public Address(long contactId, String detail, String district, String province, String ward) {
+    public Address(long contactId, String detail, String district, String province, String type, String ward) {
         this.contactId = contactId;
         this.detail = detail;
         this.district = district;
         this.province = province;
+        this.type = type;
         this.ward = ward;
     }
 
@@ -72,5 +77,19 @@ public class Address {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return detail + "\n" + ward + "\n" + district + "\n" + province;
     }
 }
