@@ -1,5 +1,6 @@
 package com.example.phonebook.Module.AddContact;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -177,7 +179,44 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
 
         ivAddDoB.setOnClickListener(addDoB -> {
             List<String> typesDoB = Arrays.asList("lịch mặc định", "lịch trung quốc", "lịch do thái", "lịch hồi giáo");
-            addAttribute(containerDoB, R.string.contact_dob, typesDoB);
+            //addAttribute(containerDoB, R.string.contact_dob, typesDoB);
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View childItem = inflater.inflate(R.layout.child_item, null);
+            TextView tvType = childItem.findViewById(R.id.child_type);
+            typeDefault = typesDoB.get(0);
+            tvType.setText(typesDoB.get(0));
+            EditText edtInput = childItem.findViewById(R.id.et_input_att);
+            edtInput.setHint(getString(R.string.contact_dob));
+            ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
+            ivDelete.setOnClickListener(delete -> containerDoB.removeView(childItem));
+            LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
+            lnSelectTyp.setOnClickListener(show -> {
+                showDialog(typesDoB, new TypeSelectionListener() {
+                    @Override
+                    public void onTypeSelected(String type) {
+                        tvType.setText(type);
+                    }
+                });
+            });
+
+            edtInput.setOnClickListener(selectDOB -> {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        requireContext(),
+                        (datePicker, selectedYear, selectedMonth, selectedDay) -> {
+                            String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                            edtInput.setText(date);
+                        },
+                        year, month, day
+                );
+                datePickerDialog.show();
+            });
+            containerDoB.addView(childItem);
         });
 
         ivAddSocial.setOnClickListener(addSocial -> {
@@ -233,7 +272,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
                     String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
                     String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
                     try {
-                        Address address = new Address(id, strDetail, strDistrict, strProvince, strWard);
+                        Address address = new Address(id, strDetail, strDistrict, strProvince, type, strWard);
                         listAddress.add(address);
                     } catch (Exception e) {
                         throw new RuntimeException(e);

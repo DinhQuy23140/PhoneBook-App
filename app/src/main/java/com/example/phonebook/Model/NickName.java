@@ -14,12 +14,12 @@ public class NickName {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private long contactId;
-    private String number;
+    private String value;
     private String type;
 
-    public NickName(long contactId, String number, String type) {
+    public NickName(long contactId, String value, String type) {
         this.contactId = contactId;
-        this.number = number;
+        this.value = value;
         this.type = type;
     }
 
@@ -39,12 +39,12 @@ public class NickName {
         this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getValue() {
+        return value;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getType() {

@@ -45,6 +45,9 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_label">Label</string>
     <string name="title_edit">Edit</string>
+    <string name="contact_detail_message">Sent message</string>
+    <string name="contact_detail_add_favo">Add to favorite</string>
+    <string name="contact_detail_add_list">Add to list</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

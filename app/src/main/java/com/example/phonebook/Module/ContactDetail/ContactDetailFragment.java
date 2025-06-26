@@ -12,14 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phonebook.Adapter.AttrAdapter;
 import com.example.phonebook.Adapter.GenericAdapter;
+import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.ContactFull;
+import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Message;
+import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
+import com.example.phonebook.Model.Social;
+import com.example.phonebook.Model.URL;
+import com.example.phonebook.Module.AddContact.AddContactFragment;
 import com.example.phonebook.R;
 import com.google.gson.Gson;
 
@@ -38,8 +48,8 @@ public class ContactDetailFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Gson gson;
-    TextView tvContactFullName, tvContactCompany;
-    RecyclerView rvContactEmail, rvContactNumber;
+    TextView tvContactFullName, tvContactCompany, tvNote;
+    RecyclerView rvContactEmail, rvContactNumber, rvNickName, rvURL, rvAddress, rvDoB, rvSocial, rvMessage;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +100,10 @@ public class ContactDetailFragment extends Fragment {
         initUI(view);
         serilize();
         Bundle bundle = getArguments();
+        loadContactDetail(bundle);
+    }
+
+    private void loadContactDetail(Bundle bundle) {
         if (bundle != null) {
             String strContac = bundle.getString("contact");
             ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
@@ -114,9 +128,65 @@ public class ContactDetailFragment extends Fragment {
                 TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
                 tvTitle.setText(email.getType());
                 TextView tvValue = itemView.findViewById(R.id.item_attr_value);
-                tvValue.setText(email.getNumber());
+                tvValue.setText(email.getValue());
             }));
             rvContactEmail.setAdapter(emailAdapter);
+
+            List<NickName> listNickName = contactFull.nickNames;
+            GenericAdapter<NickName> nickNameAdapter = new GenericAdapter<NickName>(R.layout.item_attr, listNickName, ((itemView, nickName,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(nickName.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(nickName.getValue());
+            }));
+            rvNickName.setAdapter(nickNameAdapter);
+
+            List<URL> listURL = contactFull.urls;
+            GenericAdapter<URL> urlAdapter = new GenericAdapter<URL>(R.layout.item_attr, listURL, ((itemView, url,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(url.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(url.getValue());
+            }));
+            rvURL.setAdapter(urlAdapter);
+
+            List<Address> listAddress = contactFull.addresses;
+            GenericAdapter<Address> addressAdapter = new GenericAdapter<Address>(R.layout.item_attr, listAddress, ((itemView, address,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(address.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(address.toString());
+            }));
+            rvAddress.setAdapter(addressAdapter);
+
+            List<DOB> listDoB = contactFull.dobs;
+            GenericAdapter<DOB> doBAdapter = new GenericAdapter<DOB>(R.layout.item_attr, listDoB, ((itemView, doB,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(doB.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(doB.getValue());
+            }));
+            rvDoB.setAdapter(doBAdapter);
+
+            List<Social> listSocial = contactFull.socials;
+            GenericAdapter<Social> socialAdapter = new GenericAdapter<Social>(R.layout.item_attr, listSocial, ((itemView, social,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(social.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(social.getValue());
+            }));
+            rvSocial.setAdapter(socialAdapter);
+
+            List<Message> listMessage = contactFull.messages;
+            GenericAdapter<Message> messageAdapter = new GenericAdapter<Message>(R.layout.item_attr, listMessage, ((itemView, message,  position) -> {
+                TextView tvTitle = itemView.findViewById(R.id.item_attr_title);
+                tvTitle.setText(message.getType());
+                TextView tvValue = itemView.findViewById(R.id.item_attr_value);
+                tvValue.setText(message.getValue());
+            }));
+            rvMessage.setAdapter(messageAdapter);
+
+            tvNote.setText(contactFull.contact.getNote());
         }
     }
 
@@ -127,9 +197,28 @@ public class ContactDetailFragment extends Fragment {
         rvContactNumber.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvContactEmail = view.findViewById(R.id.rv_att_email);
         rvContactEmail.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvNickName = view.findViewById(R.id.rv_att_nickname);
+        rvNickName.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvURL = view.findViewById(R.id.rv_att_url);
+        rvURL.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvAddress = view.findViewById(R.id.rv_att_address);
+        rvAddress.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvDoB = view.findViewById(R.id.rv_att_dob);
+        rvDoB.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvSocial = view.findViewById(R.id.rv_att_social);
+        rvSocial.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvMessage = view.findViewById(R.id.rv_att_message);
+        rvMessage.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        tvNote = view.findViewById(R.id.tv_attr_note);
     }
 
     private void serilize() {
         gson = new Gson();
     }
+
+//    private void loadAttr(LinearLayout container, List<T> listAttr) {
+//        LayoutInflater inflater = LayoutInflater.from(getContext());
+//        View childItem = inflater.inflate(R.layout.item_attr, null);
+//        for ()
+//    }
 }
