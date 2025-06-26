@@ -6,6 +6,7 @@ import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Favorite;
 import com.example.phonebook.Model.Message;
 import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
@@ -79,5 +80,7 @@ public class AddContactPresent implements AddContactContract.Presenter{
         contactRepository.insertMessage(message);
     }
 
-
+    public void setFavorite(Favorite favorite) {
+        contactRepository.setFavorite(favorite);
+    }
 }

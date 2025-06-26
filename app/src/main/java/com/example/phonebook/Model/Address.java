@@ -88,6 +88,6 @@ public class Address {
     @NonNull
     @Override
     public String toString() {
-        return province + "\n" + district + "\n" + ward + "\n" + detail;
+        return detail + "\n" + ward + "\n" + district + "\n" + province;
     }
 }

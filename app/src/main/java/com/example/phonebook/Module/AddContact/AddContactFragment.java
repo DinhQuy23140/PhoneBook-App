@@ -24,6 +24,7 @@ import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
+import com.example.phonebook.Model.Favorite;
 import com.example.phonebook.Model.Message;
 import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
@@ -244,22 +245,22 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
     }
 
     private void addContact(Contact contact) {
-        addContactPresent.insertContact(contact, id -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
+        addContactPresent.insertContact(contact, idContact -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
                 // Insert Phone Number
-                List<PhoneNumber> listPhone = getListType(id, containerPhone, PhoneNumber.class);
+                List<PhoneNumber> listPhone = getListType(idContact, containerPhone, PhoneNumber.class);
                 addContactPresent.insertPhoneNumber(listPhone);
 
                 // Insert Email
-                List<Email> listEmail = getListType(id, containerEmail, Email.class);
+                List<Email> listEmail = getListType(idContact, containerEmail, Email.class);
                 addContactPresent.insertEmail(listEmail);
 
                 // Insert NickName
-                List<NickName> listNickname = getListType(id, containerNickname, NickName.class);
+                List<NickName> listNickname = getListType(idContact, containerNickname, NickName.class);
                 addContactPresent.insertNickName(listNickname);
 
                 // Insert URL
-                List<URL> listURL = getListType(id, containerURL, URL.class);
+                List<URL> listURL = getListType(idContact, containerURL, URL.class);
                 addContactPresent.insertURL(listURL);
 
                 // Insert Address
@@ -272,7 +273,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
                     String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
                     String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
                     try {
-                        Address address = new Address(id, strDetail, strDistrict, strProvince, type, strWard);
+                        Address address = new Address(idContact, strDetail, strDistrict, strProvince, type, strWard);
                         listAddress.add(address);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -281,16 +282,20 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
                 addContactPresent.insertAddress(listAddress);
 
                 // Insert DoB
-                List<DOB> listDoB = getListType(id, containerDoB, DOB.class);
+                List<DOB> listDoB = getListType(idContact, containerDoB, DOB.class);
                 addContactPresent.insertDoB(listDoB);
 
                 // Insert Social
-                List<Social> listSocial = getListType(id, containerSocial, Social.class);
+                List<Social> listSocial = getListType(idContact, containerSocial, Social.class);
                 addContactPresent.insertSocial(listSocial);
 
                 // Insert Message
-                List<Message> listMessage = getListType(id, containerMessage, Message.class);
+                List<Message> listMessage = getListType(idContact, containerMessage, Message.class);
                 addContactPresent.insertMessage(listMessage);
+
+                //favorite
+                Favorite favorite = new Favorite(idContact, false);
+                addContactPresent.setFavorite(favorite);
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
