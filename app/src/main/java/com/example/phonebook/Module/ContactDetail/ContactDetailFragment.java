@@ -53,9 +53,10 @@ public class ContactDetailFragment extends Fragment {
     Gson gson;
     ImageView ivBack;
     TextView tvEditContact;
-    TextView tvContactFullName, tvContactCompany, tvNote;
+    TextView tvContactFullName, tvContactCompany, tvNote, tvDetailSendMessage, tvDetaiFavourite, tvDetailAddToGroup;
     RecyclerView rvContactEmail, rvContactNumber, rvNickName, rvURL, rvAddress, rvDoB, rvSocial, rvMessage;
     LinearLayout llAddEmail, llAddNumber, llAddNickName, llAddURL, llAddAddress, llAddDoB, llAddSocial, llAddMessage;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,15 +66,6 @@ public class ContactDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContactDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ContactDetailFragment newInstance(String param1, String param2) {
         ContactDetailFragment fragment = new ContactDetailFragment();
         Bundle args = new Bundle();
@@ -121,6 +113,9 @@ public class ContactDetailFragment extends Fragment {
             fragmentTransaction.commit();
         });
 
+        tvDetaiFavourite.setOnClickListener(favo -> {
+
+        });
     }
 
     private void loadContactDetail(Bundle bundle) {
@@ -248,16 +243,14 @@ public class ContactDetailFragment extends Fragment {
         llAddAddress = view.findViewById(R.id.layout_address);
         llAddDoB = view.findViewById(R.id.layout_dob);
         llAddSocial = view.findViewById(R.id.layout_social);
-         llAddMessage = view.findViewById(R.id.layout_message);
+        llAddMessage = view.findViewById(R.id.layout_message);
+
+        tvDetailSendMessage = view.findViewById(R.id.contact_detail_sent_message);
+        tvDetaiFavourite = view.findViewById(R.id.contact_detail_add_favo);
+        tvDetailAddToGroup = view.findViewById(R.id.contact_detail_add_list);
     }
 
     private void serilize() {
         gson = new Gson();
     }
-
-//    private void loadAttr(LinearLayout container, List<T> listAttr) {
-//        LayoutInflater inflater = LayoutInflater.from(getContext());
-//        View childItem = inflater.inflate(R.layout.item_attr, null);
-//        for ()
-//    }
 }

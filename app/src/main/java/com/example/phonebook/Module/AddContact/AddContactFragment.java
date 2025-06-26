@@ -1,10 +1,13 @@
 package com.example.phonebook.Module.AddContact;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -13,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,25 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phonebook.Fragment.AddAttDialogFragment;
-import com.example.phonebook.Model.Address;
-import com.example.phonebook.Model.Contact;
-import com.example.phonebook.Model.DOB;
-import com.example.phonebook.Model.Email;
 import com.example.phonebook.Model.Favorite;
-import com.example.phonebook.Model.Message;
-import com.example.phonebook.Model.NickName;
-import com.example.phonebook.Model.PhoneNumber;
-import com.example.phonebook.Model.Social;
-import com.example.phonebook.Model.URL;
 import com.example.phonebook.R;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.Objects;
+
+import kotlin.Triple;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -121,7 +115,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isEnable = !edtFirstName.getText().toString().isEmpty() || !edtLastName.getText().toString().isEmpty() || !edtCompany.getText().toString().isEmpty();
-                tvAddComplete.setTextColor(isEnable ? getResources().getColor(R.color.complete) : getResources().getColor(R.color.empty));
+                tvAddComplete.setTextColor(isEnable ? ContextCompat.getColor(requireContext(), R.color.complete) : ContextCompat.getColor(requireContext(), R.color.empty));
             }
 
             @Override
@@ -161,7 +155,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
 
         ivAddAddress.setOnClickListener(addAddress -> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            View childItem = inflater.inflate(R.layout.address, null);
+            @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.address, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             List<String> typesAddress = Arrays.asList("trang chủ", "nhà", "công ty", "trường học", "khác");
             typeDefault = typesAddress.get(0);
@@ -169,12 +163,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
             ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> containerAddress.removeView(childItem));
             LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
-            lnSelectTyp.setOnClickListener(show -> showDialog(typesAddress, new TypeSelectionListener() {
-                @Override
-                public void onTypeSelected(String type) {
-                    tvType.setText(type);
-                }
-            }));
+            lnSelectTyp.setOnClickListener(show -> showDialog(typesAddress, tvType::setText));
             containerAddress.addView(childItem);
         });
 
@@ -183,23 +172,16 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
             //addAttribute(containerDoB, R.string.contact_dob, typesDoB);
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            View childItem = inflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.att_dob, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             typeDefault = typesDoB.get(0);
             tvType.setText(typesDoB.get(0));
-            EditText edtInput = childItem.findViewById(R.id.et_input_att);
+            TextView edtInput = childItem.findViewById(R.id.et_input_att);
             edtInput.setHint(getString(R.string.contact_dob));
             ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
             ivDelete.setOnClickListener(delete -> containerDoB.removeView(childItem));
             LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
-            lnSelectTyp.setOnClickListener(show -> {
-                showDialog(typesDoB, new TypeSelectionListener() {
-                    @Override
-                    public void onTypeSelected(String type) {
-                        tvType.setText(type);
-                    }
-                });
-            });
+            lnSelectTyp.setOnClickListener(show -> showDialog(typesDoB, tvType::setText));
 
             edtInput.setOnClickListener(selectDOB -> {
                 Calendar calendar = Calendar.getInstance();
@@ -238,69 +220,62 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
             String company = edtCompany.getText().toString();
             String note = edtNote.getText().toString();
             if (!firstName.isEmpty() || !lastName.isEmpty() || !company.isEmpty() || !note.isEmpty()) {
-                Contact contact = new Contact(company, firstName, lastName, note);
-                addContact(contact);
+                addContact(firstName, lastName, company, note);
             }
         });
     }
 
-    private void addContact(Contact contact) {
-        addContactPresent.insertContact(contact, idContact -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            try {
-                // Insert Phone Number
-                List<PhoneNumber> listPhone = getListType(idContact, containerPhone, PhoneNumber.class);
-                addContactPresent.insertPhoneNumber(listPhone);
 
-                // Insert Email
-                List<Email> listEmail = getListType(idContact, containerEmail, Email.class);
-                addContactPresent.insertEmail(listEmail);
+    private void addContact(String firstName, String lastName, String company, String note) {
+        addContactPresent.inserContact(firstName, lastName, company, note, idContact -> {
+            // Insert Phone Number
+            List<Triple<String,String,Long>> listPhone = collectDataAttribute(idContact, containerPhone);
 
-                // Insert NickName
-                List<NickName> listNickname = getListType(idContact, containerNickname, NickName.class);
-                addContactPresent.insertNickName(listNickname);
+            // Insert Email
+            List<Triple<String,String,Long>> listEmail = collectDataAttribute(idContact, containerEmail);
 
-                // Insert URL
-                List<URL> listURL = getListType(idContact, containerURL, URL.class);
-                addContactPresent.insertURL(listURL);
+            // Insert NickName
+            List<Triple<String,String,Long>> listNickname = collectDataAttribute(idContact, containerNickname);
 
-                // Insert Address
-                List<Address> listAddress = new ArrayList<>();
-                for (int i = 0; i < containerAddress.getChildCount(); i++) {
-                    View child = containerAddress.getChildAt(i);
-                    String strProvince = ((EditText) child.findViewById(R.id.et_input_province)).getText().toString().trim();
-                    String strDistrict = ((EditText) child.findViewById(R.id.et_input_district)).getText().toString().trim();
-                    String strWard = ((EditText) child.findViewById(R.id.et_input_ward)).getText().toString().trim();
-                    String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
-                    String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
-                    try {
-                        Address address = new Address(idContact, strDetail, strDistrict, strProvince, type, strWard);
-                        listAddress.add(address);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                addContactPresent.insertAddress(listAddress);
+            // Insert URL
+            List<Triple<String,String,Long>> listURL = collectDataAttribute(idContact, containerURL);
 
-                // Insert DoB
-                List<DOB> listDoB = getListType(idContact, containerDoB, DOB.class);
-                addContactPresent.insertDoB(listDoB);
+            // Insert Address
+            List<Triple<String,String,Long>> listAddress = collectAddressAttributes(idContact);
+//            for (int i = 0; i < containerAddress.getChildCount(); i++) {
+//                View child = containerAddress.getChildAt(i);
+//                String strProvince = ((EditText) child.findViewById(R.id.et_input_province)).getText().toString().trim();
+//                String strDistrict = ((EditText) child.findViewById(R.id.et_input_district)).getText().toString().trim();
+//                String strWard = ((EditText) child.findViewById(R.id.et_input_ward)).getText().toString().trim();
+//                String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
+//                String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+//                try {
+//                    String address = strDetail + " " + strWard + " " + strDistrict + " " + strProvince;
+//                    listAddress.add(new Triple<>(type, address, idContact));
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
 
-                // Insert Social
-                List<Social> listSocial = getListType(idContact, containerSocial, Social.class);
-                addContactPresent.insertSocial(listSocial);
-
-                // Insert Message
-                List<Message> listMessage = getListType(idContact, containerMessage, Message.class);
-                addContactPresent.insertMessage(listMessage);
-
-                //favorite
-                Favorite favorite = new Favorite(idContact, false);
-                addContactPresent.setFavorite(favorite);
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            // Insert DoB
+            List<Triple<String,String,Long>> listDoB = new ArrayList<>();
+            for (int i = 0; i < containerDoB.getChildCount(); i++) {
+                View child = containerDoB.getChildAt(i);
+                String value = ((TextView) child.findViewById(R.id.et_input_att)).getText().toString().trim();
+                String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+                listDoB.add(new Triple<>(value, type, idContact));
             }
-        }));
+
+            // Insert Social
+            List<Triple<String,String,Long>> listSocial = collectDataAttribute(idContact, containerSocial);
+
+            // Insert Message
+            List<Triple<String,String,Long>> listMessage = collectDataAttribute(idContact, containerMessage);
+
+            //favorite
+            Favorite favorite = new Favorite(idContact, false);
+            addContactPresent.insertAttr(listPhone, listEmail, listNickname, listURL, listAddress, listDoB, listSocial, listMessage, favorite);
+        });
     }
 
     private void initView(View view) {
@@ -335,7 +310,7 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
 
     private void addAttribute(LinearLayout container, int idHint, List<String> types) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View childItem = inflater.inflate(R.layout.child_item, null);
+        @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.child_item, null);
         TextView tvType = childItem.findViewById(R.id.child_type);
         if (!types.isEmpty()) {
             typeDefault = types.get(0);
@@ -346,37 +321,48 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
         ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
         ivDelete.setOnClickListener(delete -> container.removeView(childItem));
         LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
-        lnSelectTyp.setOnClickListener(show -> {
-            showDialog(types, new TypeSelectionListener() {
-                @Override
-                public void onTypeSelected(String type) {
-                    tvType.setText(type);
-                }
-            });
-        });
+        lnSelectTyp.setOnClickListener(show -> showDialog(types, tvType::setText));
         container.addView(childItem);
+
+        edtInput.requestFocus();
+        InputMethodManager inputMethod = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethod.showSoftInput(edtInput, InputMethodManager.SHOW_IMPLICIT);
     }
 
     private void showDialog(List<String> types, TypeSelectionListener  typeSelectionListener) {
         AddAttDialogFragment dialog = new AddAttDialogFragment(types, typeSelectionListener::onTypeSelected);
         dialog.show(getParentFragmentManager(), "AddAttDialog");
     }
-    private <T> List<T> getListType(long id,LinearLayout container, Class<T> clazz) {
-        List<T> listType = new ArrayList<>();
+
+    private List<Triple<String, String, Long>> collectDataAttribute(long idContact, LinearLayout container) {
+        List<Triple<String,String, Long>> listData = new ArrayList<>();
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);
             String value = ((EditText) child.findViewById(R.id.et_input_att)).getText().toString().trim();
             String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
-            try {
-                Constructor<T> constructor = clazz.getConstructor(long.class, String.class, String.class);
-                listType.add(constructor.newInstance(id, value, type));
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
-                     java.lang.InstantiationException e) {
-                throw new RuntimeException(e);
-            }
+            listData.add(new Triple<>(value, type, idContact));
         }
-        return listType;
+        return listData;
     }
+
+    private List<Triple<String, String, Long>> collectAddressAttributes(long idContact) {
+        List<Triple<String, String, Long>> list = new ArrayList<>();
+        for (int i = 0; i < containerAddress.getChildCount(); i++) {
+            View child = containerAddress.getChildAt(i);
+            String strProvince = ((EditText) child.findViewById(R.id.et_input_province)).getText().toString().trim();
+            String strDistrict = ((EditText) child.findViewById(R.id.et_input_district)).getText().toString().trim();
+            String strWard = ((EditText) child.findViewById(R.id.et_input_ward)).getText().toString().trim();
+            String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
+            String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+
+            String fullAddress = strDetail + "\n" + strWard + "\n" + strDistrict + "\n" + strProvince;
+            list.add(new Triple<>(type, fullAddress, idContact));
+        }
+        return list;
+    }
+
+
+
 
     @Override
     public void addContactSuccess() {
