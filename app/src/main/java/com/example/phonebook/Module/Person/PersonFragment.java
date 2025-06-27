@@ -98,28 +98,36 @@ public class PersonFragment extends Fragment {
 
         contactRepository = new ContactRepository(requireContext());
 
-        contactRepository.getAllContacts(result -> {
-            requireActivity().runOnUiThread(() -> {
+        contactRepository.getAllContacts(new ContactRepository.CallBack() {
+            @Override
+            public void onSuccess(List<ContactFull> result) {
+                requireActivity().runOnUiThread(() -> {
 //                List<ContactFull> safeResult = (result == null) ? new ArrayList<>() : result;
-                if (result != null) {
-                    contactAdapter = new ContactAdapter(getContext(), result, position -> {
-                        ContactFull contactFull = result.get(position);
-                        ContactDetailFragment contactDetailFragment = new ContactDetailFragment();
-                        Bundle bundle = new Bundle();
-                        Gson gson = new Gson();
-                        String strContactFull = gson.toJson(contactFull);
-                        bundle.putString("contact", strContactFull);
-                        contactDetailFragment.setArguments(bundle);
-                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.frame_container, contactDetailFragment);
-                        fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
-                        fragmentTransaction.commit();
-                    });
-                    rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
-                    tvCountContact.setText(String.format("%s %s", result.size(), getString(R.string.contact_title)));
-                }
-            });
+                    if (result != null) {
+                        contactAdapter = new ContactAdapter(getContext(), result, position -> {
+                            ContactFull contactFull = result.get(position);
+                            ContactDetailFragment contactDetailFragment = new ContactDetailFragment();
+                            Bundle bundle = new Bundle();
+                            Gson gson = new Gson();
+                            String strContactFull = gson.toJson(contactFull);
+                            bundle.putString("contact", strContactFull);
+                            contactDetailFragment.setArguments(bundle);
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.frame_container, contactDetailFragment);
+                            fragmentTransaction.addToBackStack(null); // nên thêm dòng này để quay lại được
+                            fragmentTransaction.commit();
+                        });
+                        rvContact.setAdapter(contactAdapter); // LUÔN set adapter NGAY tại đây
+                        tvCountContact.setText(String.format("%s %s", result.size(), getString(R.string.contact_title)));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
         });
 
         ivPerson = view.findViewById(R.id.iv_add_contact);

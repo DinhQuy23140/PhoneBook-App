@@ -4,6 +4,10 @@ import com.example.phonebook.Model.Favorite;
 import com.example.phonebook.Model.PhoneNumber;
 
 public interface ContactDetailContract {
-    void setFavorite(Favorite favorite);
+    interface View {
 
+    }
+    interface Present {
+        void updateFavorite(Favorite favorite);
+    }
 }
