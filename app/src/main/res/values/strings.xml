@@ -48,6 +48,7 @@
     <string name="contact_detail_message">Sent message</string>
     <string name="contact_detail_add_favo">Add to favorite</string>
     <string name="contact_detail_add_list">Add to list</string>
+    <string name="favorite_empty">No favorite contact</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

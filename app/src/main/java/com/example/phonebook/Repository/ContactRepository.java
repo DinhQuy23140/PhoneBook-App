@@ -58,6 +58,8 @@ public class ContactRepository {
 
     public interface CallBack {
         void onSuccess(List<ContactFull> result);
+
+        void onFailure(Exception e);
     }
 
     public interface CallBackInsert {
@@ -122,6 +124,12 @@ public class ContactRepository {
         favoriteDAO.insertFavorite(favorite);
     }
 
+    public void updateFavorite(Favorite favorite) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            favoriteDAO.updateFavorite(favorite.isFavorite(), favorite.getContactId());
+        });
+    }
+
     public MutableLiveData<List<Province>> getListProvince() {
         return listProvince;
     }
@@ -132,6 +140,13 @@ public class ContactRepository {
             callBack.onSuccess(contactDAO.getAllContacts());
         });
     }
+
+    public void getFavoriteContacts(CallBack callBack) {
+        List<Contact> result = new ArrayList<>();
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            callBack.onSuccess(favoriteDAO.getFavorite());
+        });
+    };
 
     public void getAddress() {
         APIService apiService = AddressClient.getRetrofit().create(APIService.class);
