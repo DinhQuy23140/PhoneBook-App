@@ -112,6 +112,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             UpdateContactFragment updateFragment = new UpdateContactFragment();
+            updateFragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.frame_container, updateFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
