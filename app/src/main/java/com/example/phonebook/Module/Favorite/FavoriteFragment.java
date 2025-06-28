@@ -52,7 +52,7 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View{
     public FavoriteFragment() {
         // Required empty public constructor
     }
-    
+
     public static FavoriteFragment newInstance(String param1, String param2) {
         FavoriteFragment fragment = new FavoriteFragment();
         Bundle args = new Bundle();
