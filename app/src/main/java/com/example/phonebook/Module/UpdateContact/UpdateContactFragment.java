@@ -75,8 +75,8 @@ public class UpdateContactFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Bundle bundle = getArguments();
-        String strContac = bundle.getString("contact");
-        ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
+//        String strContac = bundle.getString("contact");
+//        ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
     }
 
     private void serilize() {

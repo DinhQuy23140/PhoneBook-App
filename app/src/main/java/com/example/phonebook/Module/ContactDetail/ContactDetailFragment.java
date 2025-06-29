@@ -1,11 +1,17 @@
 package com.example.phonebook.Module.ContactDetail;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,13 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.phonebook.Adapter.AttrAdapter;
 import com.example.phonebook.Adapter.GenericAdapter;
 import com.example.phonebook.Model.Address;
 import com.example.phonebook.Model.ContactFull;
@@ -33,19 +37,12 @@ import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
-import com.example.phonebook.Module.AddContact.AddContactFragment;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
 import com.example.phonebook.R;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ContactDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ContactDetailFragment extends Fragment implements ContactDetailContract.View{
 
     // TODO: Rename parameter arguments, choose names that match
@@ -53,7 +50,9 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Gson gson;
-    ImageView ivBack;
+    Bundle bundle;
+    ContactFull contactFull;
+    ImageView ivBack, ivSendMessage, ivCall, ivCallVideo, ivSentEmail;
     TextView tvEditContact;
     TextView tvContactFullName, tvContactCompany, tvNote, tvDetailSendMessage, tvDetaiFavourite, tvDetailAddToGroup;
     RecyclerView rvContactEmail, rvContactNumber, rvNickName, rvURL, rvAddress, rvDoB, rvSocial, rvMessage;
@@ -99,9 +98,9 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         super.onViewCreated(view, savedInstanceState);
         initUI(view);
         serilize(requireContext());
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         String strContac = bundle.getString("contact");
-        ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
+        contactFull = gson.fromJson(strContac, ContactFull.class);
         loadContactDetail(contactFull);
 
         ivBack.setOnClickListener(v -> {
@@ -120,6 +119,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
         tvDetaiFavourite.setOnClickListener(favo -> {
             contactDetailPresent.updateFavorite(new Favorite(contactFull.contact.getId(), true));
+        });
+
+        ivCall.setOnClickListener(call -> {
+            contactDetailPresent.callRequest(contactFull.phones.get(0).getNumber());
         });
     }
 
@@ -218,6 +221,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     private void initUI(View view) {
         ivBack = view.findViewById(R.id.iv_detail_back);
+        ivSendMessage = view.findViewById(R.id.iv_sent_message);
+        ivCall = view.findViewById(R.id.iv_detail_call);
+        ivCallVideo = view.findViewById(R.id.iv_detail_call_video);
+        ivSentEmail = view.findViewById(R.id.iv_detail_sent_email);
         tvEditContact = view.findViewById(R.id.tv_detail_edit);
         tvContactFullName = view.findViewById(R.id.tv_contact_fullname);
         tvContactCompany = view.findViewById(R.id.tv_contact_company);
@@ -253,8 +260,57 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         tvDetailAddToGroup = view.findViewById(R.id.contact_detail_add_list);
     }
 
+
+
     private void serilize(Context context) {
         gson = new Gson();
-        contactDetailPresent = new ContactDetailPresent(context);
+        contactDetailPresent = new ContactDetailPresent(context, this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PhoneNumber phoneNumber = contactFull.phones.get(0);
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                makeCall(phoneNumber.getNumber());
+            }
+        }
+    }
+
+    @Override
+    public void requestCall(String phoneNumber) {
+        String number = "tel:" + phoneNumber.toString();
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, 1001);
+        } else {
+            makeCall(number);
+        }
+    }
+
+    @Override
+    public void requestVideoCall(String phoneNumber) {
+
+    }
+
+    @Override
+    public void requestSendEmail(String email) {
+
+    }
+
+    @Override
+    public void requestSendMessage(String phoneNumber) {
+
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    void makeCall(String phoneNumber) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(phoneNumber));
+        startActivity(callIntent);
     }
 }

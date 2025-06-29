@@ -105,7 +105,7 @@
                                     app:cardMaxElevation="0dp">
 
                                     <ImageView
-                                        android:id="@+id/imageView4"
+                                        android:id="@+id/iv_sent_message"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:scaleX="0.7"
@@ -133,7 +133,7 @@
                                     app:cardMaxElevation="0dp">
 
                                     <ImageView
-                                        android:id="@+id/imageView6"
+                                        android:id="@+id/iv_detail_call"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:scaleX="0.7"
@@ -163,7 +163,7 @@
                                     app:cardMaxElevation="0dp">
 
                                     <ImageView
-                                        android:id="@+id/imageView7"
+                                        android:id="@+id/iv_detail_call_video"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:src="@drawable/ic_camera" />
@@ -189,7 +189,7 @@
                                     app:cardMaxElevation="0dp">
 
                                     <ImageView
-                                        android:id="@+id/imageView8"
+                                        android:id="@+id/iv_detail_sent_email"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:scaleX="0.7"
