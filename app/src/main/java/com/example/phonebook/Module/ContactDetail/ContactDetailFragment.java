@@ -124,11 +124,13 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         ivCall.setOnClickListener(call -> {
             contactDetailPresent.callRequest(contactFull.phones.get(0).getNumber());
         });
+
+        ivSendMessage.setOnClickListener(sendMessage -> {
+            contactDetailPresent.sendMessage(contactFull.phones.get(0).getNumber());
+        });
     }
 
     private void loadContactDetail(ContactFull contactFull) {
-//            String strContac = bundle.getString("contact");
-//            ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
         String fullName = contactFull.contact.getFirstName() + " " + contactFull.contact.getLastName();
         tvContactFullName.setText(fullName);
         if (contactFull.contact.getCompany() != null) {
@@ -300,7 +302,9 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     @Override
     public void requestSendMessage(String phoneNumber) {
-
+        String number = "smsto:" + phoneNumber;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(number));
+        startActivity(intent);
     }
 
     @Override

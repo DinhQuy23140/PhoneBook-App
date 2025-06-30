@@ -33,7 +33,9 @@ public class ContactDetailPresent implements ContactDetailContract.Present {
 
     @Override
     public void sendMessage(String phoneNumber) {
-
+        if (!phoneNumber.isEmpty()) {
+            view.requestSendMessage(phoneNumber);
+        }
     }
 
     @Override
@@ -45,5 +47,4 @@ public class ContactDetailPresent implements ContactDetailContract.Present {
     public void sendEmail(String email) {
 
     }
-
 }

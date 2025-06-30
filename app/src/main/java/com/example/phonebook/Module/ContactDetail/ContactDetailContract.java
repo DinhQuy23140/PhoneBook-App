@@ -13,12 +13,7 @@ public interface ContactDetailContract {
     }
     interface Present {
         void updateFavorite(Favorite favorite);
-/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
-        /**
-         * G i s  nh vi n kh ng th c thi g i  di n tho i b ng s  di n tho i
-         * @param phoneNumber s  di n tho i c n g i
-         */
-/* <<<<<<<<<<  11d58b81-d46e-4c9f-b183-b47ea60229d6  >>>>>>>>>>> */
+
         void callRequest (String phoneNumber);
 
         void sendMessage(String phoneNumber);
