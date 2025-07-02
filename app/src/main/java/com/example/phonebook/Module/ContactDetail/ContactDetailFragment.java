@@ -141,6 +141,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
             contactDetailPresent.sendMessage(contactFull.phones.get(0).getNumber());
         });
 
+        ivSentEmail.setOnClickListener(sendEmail -> {
+            contactDetailPresent.sendEmail(contactFull.emails.get(0).getValue());
+        });
+
     }
 
     private void loadContactDetail(ContactFull contactFull) {
@@ -335,7 +339,14 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     @Override
     public void requestSendEmail(String email) {
-
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        try {
+            startActivity(Intent.createChooser(intent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-
 import kotlin.Triple;
 
 /**
@@ -101,9 +100,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
         serilize(getContext());
         initUI(view);
 
-        tvCancel.setOnClickListener(cancel -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+        tvCancel.setOnClickListener(cancel -> requireActivity().getSupportFragmentManager().popBackStack());
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -206,9 +203,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
             addAttribute(lnAddMessage, R.string.contact_message, typesMessage);
         });
 
-        tvComplete.setOnClickListener(update -> {
-            updateContact();
-        });
+        tvComplete.setOnClickListener(update -> updateContact());
     }
 
     private void loadPhoneNumber(LinearLayout container, List<PhoneNumber> listPhone) {
@@ -242,7 +237,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadNickName(LinearLayout container, List<NickName> listNickName) {
         for (NickName nickName : listNickName) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(nickName.getType());
             EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -256,7 +251,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadURL(LinearLayout container, List<URL> listURL) {
         for (URL url : listURL) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(url.getType());
             EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -270,7 +265,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadAddress(LinearLayout container, List<Address> listAddress) {
         for (Address address : listAddress) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.address, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.address, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(address.getType());
             EditText edtProvince = childItem.findViewById(R.id.et_input_province);
@@ -290,7 +285,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadDoB(LinearLayout container, List<DOB> listDoB) {
         for (DOB doB : listDoB) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(doB.getType());
             EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -304,7 +299,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadSocial(LinearLayout container, List<Social> listSocial) {
         for (Social social : listSocial) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(social.getType());
             EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -318,7 +313,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
     private void loadMessage(LinearLayout container, List<Message> listMessage) {
         for (Message message : listMessage) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            View childItem = layoutInflater.inflate(R.layout.child_item, null);
+            @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
             TextView tvType = childItem.findViewById(R.id.child_type);
             tvType.setText(message.getType());
             EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -331,7 +326,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
 
     private void addAttribute(LinearLayout container, int idHint, List<String> type) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View childItem = layoutInflater.inflate(R.layout.child_item, null);
+        @SuppressLint("InflateParams") View childItem = layoutInflater.inflate(R.layout.child_item, null);
         TextView tvType = childItem.findViewById(R.id.child_type);
         tvType.setText(type.get(0));
         EditText edtInput = childItem.findViewById(R.id.et_input_att);
@@ -351,12 +346,11 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
         LayoutInflater inflater = LayoutInflater.from(getContext());
         @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.address, null);
         TextView tvType = childItem.findViewById(R.id.child_type);
-        List<String> typesAddress = Arrays.asList("trang chủ", "nhà", "công ty", "trường học", "khác");
-        tvType.setText(typesAddress.get(0));
+        tvType.setText(types.get(0));
         ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
         ivDelete.setOnClickListener(delete -> container.removeView(childItem));
         LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
-        lnSelectTyp.setOnClickListener(show -> showDialog(typesAddress, tvType::setText));
+        lnSelectTyp.setOnClickListener(show -> showDialog(types, tvType::setText));
         container.addView(childItem);
 
     }
@@ -471,9 +465,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
 
     @Override
     public void updateContactSuccess() {
-        getActivity().runOnUiThread(() -> {
-            Toast.makeText(requireContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
-        });
+        requireActivity().runOnUiThread(() -> Toast.makeText(requireContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show());
     }
 
     @Override
