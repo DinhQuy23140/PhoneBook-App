@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phonebook.Fragment.AddAttDialogFragment;
 import com.example.phonebook.Model.Address;
@@ -203,6 +204,10 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
             List<String> typesMessage = Arrays.asList("Meet", "Teams", "YouTobe", "MoMo", "X", "Shopee", "TikTok", "Messenger",
                     "Facebook", "Zalo", "Gmail", "Locket", "Duolingo", "Pinterest", "Outlook", "Threads", "Instagram", "Discord", "Twitch", "Linkedln", "Myspace", "Sina Weibo");
             addAttribute(lnAddMessage, R.string.contact_message, typesMessage);
+        });
+
+        tvComplete.setOnClickListener(update -> {
+            updateContact();
         });
     }
 
@@ -419,6 +424,17 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
         return listData;
     }
 
+    private List<Triple<String, String, Long>> collectDOB(LinearLayout container, long contactId) {
+        List<Triple<String, String, Long>> listData = new ArrayList<>();
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View child = container.getChildAt(i);
+            String value = ((TextView) child.findViewById(R.id.et_input_att)).getText().toString().trim();
+            String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+            listData.add(new Triple<>(value, type, contactId));
+        }
+        return listData;
+    }
+
     private void updateContact() {
         //phone number
         List<Triple<String, String, Long>> listPhone = collectAttribute(lnAddPhone, contactFull.contact.getId());
@@ -436,7 +452,7 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
         List<Triple<String, String, Long>> listAddress = collectAddressAttributes(contactFull.contact.getId());
 
         //DoB
-        List<Triple<String, String, Long>> listDoB = collectAttribute(lnAddDoB, contactFull.contact.getId());
+        List<Triple<String, String, Long>> listDoB = collectDOB(lnAddDoB, contactFull.contact.getId());
 
         //social
         List<Triple<String, String, Long>> listSocial = collectAttribute(lnAddSocial, contactFull.contact.getId());
@@ -450,11 +466,14 @@ public class UpdateContactFragment extends Fragment implements UpdateContactCont
         String note = edtNote.getText().toString().trim();
         Contact contact = new Contact(company, firstName, lastName, note);
         contact.setId(contactFull.contact.getId());
+        updateContactPresent.updateContact(contact, listPhone, listEmail, listNickname, listURL, listAddress, listDoB, listSocial, listMessage);
     }
 
     @Override
     public void updateContactSuccess() {
-
+        getActivity().runOnUiThread(() -> {
+            Toast.makeText(requireContext(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override

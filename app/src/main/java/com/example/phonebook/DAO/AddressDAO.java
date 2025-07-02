@@ -13,6 +13,9 @@ public interface AddressDAO {
     @Query("SELECT * FROM address")
     List<Address> getAllAddresses();
 
+    @Query("DELETE FROM address WHERE contactId = :contactId")
+    void deleteAddress(long contactId);
+
     @Insert
     void insertAddress(List<Address> address);
 }

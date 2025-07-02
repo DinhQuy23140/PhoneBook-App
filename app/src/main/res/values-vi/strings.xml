@@ -36,6 +36,7 @@
     <string name="add_message">Thêm tin nhắn nhanh</string>
     <string name="contact_title">Liên hệ</string>
     <string name="add_success">Thêm liên hệ thành công</string>
+    <string name="update_success">Cập nhập thành công</string>
     <string name="address_add">Thêm địa chỉ</string>
     <string name="address_province">Tỉnh/Thành phố</string>
     <string name="address_district">Quận/Huyện</string>
