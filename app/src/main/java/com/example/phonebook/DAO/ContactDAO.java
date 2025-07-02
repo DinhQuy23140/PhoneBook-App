@@ -16,6 +16,9 @@ public interface ContactDAO {
     @Query("SELECT * FROM contacts")
     List<ContactFull> getAllContacts();
 
+    @Query("UPDATE contacts SET first_name = :firstName, last_name = :lastName, company = :company, note = :note WHERE id = :id")
+    void updateContact(long id, String firstName, String lastName, String company, String note);
+
     @Insert
     long insertContact(Contact contact);
 }

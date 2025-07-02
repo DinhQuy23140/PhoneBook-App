@@ -225,7 +225,6 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
         });
     }
 
-
     private void addContact(String firstName, String lastName, String company, String note) {
         addContactPresent.inserContact(firstName, lastName, company, note, idContact -> {
             // Insert Phone Number
@@ -346,9 +345,6 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
         }
         return list;
     }
-
-
-
 
     @Override
     public void addContactSuccess() {
