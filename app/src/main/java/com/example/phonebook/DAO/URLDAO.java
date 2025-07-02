@@ -14,6 +14,9 @@ public interface URLDAO {
     @Query("SELECT * FROM URL")
     List<URL> getAllURLs();
 
+    @Query("DELETE FROM URL WHERE contactId = :contactId")
+    void deleteURL(long contactId);
+
     @Insert
     void insertURL(List<URL> url);
 }

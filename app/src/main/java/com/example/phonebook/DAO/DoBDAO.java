@@ -16,6 +16,9 @@ public interface DoBDAO {
     @Query("SELECT * FROM DoB WHERE contactId = :id")
     DOB getDoBbyId(long id);
 
+    @Query("DELETE FROM DoB WHERE contactId = :id")
+    void deleteDoB(long id);
+
     @Insert
     void insertDoB(List<DOB> dob);
 }

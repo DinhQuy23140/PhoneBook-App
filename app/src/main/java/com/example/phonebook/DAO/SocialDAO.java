@@ -14,6 +14,9 @@ public interface SocialDAO {
     @Query("SELECT * FROM social")
     List<Social> getAllSocials();
 
+    @Query("DELETE FROM social WHERE contactId = :contactId")
+    void deleteSocial(long contactId);
+
     @Insert
     void insertSocial(List<Social> social);
 }

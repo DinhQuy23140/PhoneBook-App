@@ -56,6 +56,7 @@ public class ContactRepository {
     RecentDAO recentDAO;
     MutableLiveData<List<Province>> listProvince = new MutableLiveData<>();
 
+
     public interface CallBack {
         void onSuccess(List<ContactFull> result);
 
@@ -163,6 +164,68 @@ public class ContactRepository {
                 listProvince.setValue(new ArrayList<>());
                 Log.d("error", throwable.getMessage());
             }
+        });
+    }
+
+    public void updateContact(Contact contact) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            contactDAO.updateContact(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getCompany(), contact.getNote());
+        });
+    }
+
+    public void updatePhoneNumber(List<PhoneNumber> listPhoneNumber) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            phoneNumberDAO.deletePhoneNumber(listPhoneNumber.get(0).getContactId());
+            phoneNumberDAO.insertPhoneNumber(listPhoneNumber);
+        });
+    }
+
+    public void updateEmail(List<Email> listEmail) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            emailDAO.deleteEmail(listEmail.get(0).getContactId());
+            emailDAO.insertEmail(listEmail);
+        });
+    }
+
+    public void updateNickName(List<NickName> listNickName) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            nickNameDAO.deleteNickName(listNickName.get(0).getContactId());
+            nickNameDAO.insertNickName(listNickName);
+        });
+    }
+
+    public void updateURL(List<URL> listURL) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            urldao.deleteURL(listURL.get(0).getContactId());
+            urldao.insertURL(listURL);
+        });
+    }
+
+    public void updateAddress(List<Address> listAddress) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            addressDAO.deleteAddress(listAddress.get(0).getContactId());
+            addressDAO.insertAddress(listAddress);
+        });
+    }
+
+    public void updateDoB(List<DOB> listDoB) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            DOBDAO.deleteDoB(listDoB.get(0).getContactId());
+            DOBDAO.insertDoB(listDoB);
+        });
+    }
+
+    public void updateSocial(List<Social> listSocial) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            socialDAO.deleteSocial(listSocial.get(0).getContactId());
+            socialDAO.insertSocial(listSocial);
+        });
+    }
+
+    public void updateMessage(List<Message> listMessage) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            messageDAO.deleteMessage(listMessage.get(0).getContactId());
+            messageDAO.insertMessage(listMessage);
         });
     }
 }
