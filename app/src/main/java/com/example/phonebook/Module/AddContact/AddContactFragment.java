@@ -242,20 +242,6 @@ public class AddContactFragment extends Fragment implements AddContactContract.V
 
             // Insert Address
             List<Triple<String,String,Long>> listAddress = collectAddressAttributes(idContact);
-//            for (int i = 0; i < containerAddress.getChildCount(); i++) {
-//                View child = containerAddress.getChildAt(i);
-//                String strProvince = ((EditText) child.findViewById(R.id.et_input_province)).getText().toString().trim();
-//                String strDistrict = ((EditText) child.findViewById(R.id.et_input_district)).getText().toString().trim();
-//                String strWard = ((EditText) child.findViewById(R.id.et_input_ward)).getText().toString().trim();
-//                String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
-//                String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
-//                try {
-//                    String address = strDetail + " " + strWard + " " + strDistrict + " " + strProvince;
-//                    listAddress.add(new Triple<>(type, address, idContact));
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
 
             // Insert DoB
             List<Triple<String,String,Long>> listDoB = new ArrayList<>();

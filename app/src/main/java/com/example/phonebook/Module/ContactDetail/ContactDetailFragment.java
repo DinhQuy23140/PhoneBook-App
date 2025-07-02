@@ -3,6 +3,7 @@ package com.example.phonebook.Module.ContactDetail;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,7 +18,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +40,7 @@ import com.example.phonebook.Model.URL;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
 import com.example.phonebook.R;
 import com.google.gson.Gson;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDetailFragment extends Fragment implements ContactDetailContract.View{
@@ -58,6 +58,14 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
     RecyclerView rvContactEmail, rvContactNumber, rvNickName, rvURL, rvAddress, rvDoB, rvSocial, rvMessage;
     LinearLayout llAddEmail, llAddNumber, llAddNickName, llAddURL, llAddAddress, llAddDoB, llAddSocial, llAddMessage;
     ContactDetailPresent contactDetailPresent;
+    private static final int REQUEST_PERMISSIONS_CODE = 123, REQUEST_CALL = 1001;
+
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+    };
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -108,13 +116,17 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         });
 
         tvEditContact.setOnClickListener(v -> {
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            UpdateContactFragment updateFragment = new UpdateContactFragment();
-            updateFragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.frame_container, updateFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            if (bundle != null) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                UpdateContactFragment updateFragment = new UpdateContactFragment();
+                updateFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.frame_container, updateFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            } else {
+                Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
         });
 
         tvDetaiFavourite.setOnClickListener(favo -> {
@@ -128,6 +140,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         ivSendMessage.setOnClickListener(sendMessage -> {
             contactDetailPresent.sendMessage(contactFull.phones.get(0).getNumber());
         });
+
     }
 
     private void loadContactDetail(ContactFull contactFull) {
@@ -273,9 +286,14 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PhoneNumber phoneNumber = contactFull.phones.get(0);
-        if (requestCode == 1001) {
+        if (requestCode == REQUEST_CALL) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 makeCall(phoneNumber.getNumber());
+            }
+        }
+        if (requestCode == REQUEST_PERMISSIONS_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                makeCallVideo(phoneNumber.getNumber(), "1");
             }
         }
     }
@@ -284,9 +302,29 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
     public void requestCall(String phoneNumber) {
         String number = "tel:" + phoneNumber.toString();
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, 1001);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
         } else {
             makeCall(number);
+        }
+    }
+
+    public void requestCallVideo(String phoneNumber) {
+    }
+    
+    private void checkAndRequestPermissions() {
+        List<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_CODE);
+        } else {
+            makeCallVideo(contactFull.phones.get(0).getNumber(), "1");
         }
     }
 
@@ -317,4 +355,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         callIntent.setData(Uri.parse(phoneNumber));
         startActivity(callIntent);
     }
+
+
+    public void makeCallVideo(String callerPhoneNumber, String calleePhoneNumber) {
+    }
+
+
 }

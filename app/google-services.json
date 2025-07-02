@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1000341034683",
+    "firebase_url": "https://contactapp-11918-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "contactapp-11918",
+    "storage_bucket": "contactapp-11918.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000341034683:android:70a2947da3f93ccea9fb9e",
+        "android_client_info": {
+          "package_name": "com.example.phonebook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXrfFq2-tW7dW08iJyVdu3vEGIGKFQnyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
