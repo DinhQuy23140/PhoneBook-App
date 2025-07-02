@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.phonebook.Fragment.AddAttDialogFragment;
 import com.example.phonebook.Model.Address;
+import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Model.ContactFull;
 import com.example.phonebook.Model.DOB;
 import com.example.phonebook.Model.Email;
@@ -32,16 +33,19 @@ import com.example.phonebook.Module.AddContact.AddContactFragment;
 import com.example.phonebook.R;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import kotlin.Triple;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link UpdateContactFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UpdateContactFragment extends Fragment {
+public class UpdateContactFragment extends Fragment implements UpdateContactContract.View{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +57,8 @@ public class UpdateContactFragment extends Fragment {
     LinearLayout lnAddPhone, lnAddEmail, lnAddNickname, lnAddURL, lnAddAddress, lnAddDoB, lnAddSocial, lnAddMessage;
     ImageView ivAddPhone, ivAddEmail, ivAddNickname, ivAddURL, ivAddAddress, ivAddDoB, ivAddSocial, ivAddMessage;
     UpdateContactPresent updateContactPresent;
+    String strContac;
+    ContactFull contactFull;
 
 
     // TODO: Rename and change types of parameters
@@ -91,7 +97,7 @@ public class UpdateContactFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        serilize();
+        serilize(getContext());
         initUI(view);
 
         tvCancel.setOnClickListener(cancel -> {
@@ -100,15 +106,15 @@ public class UpdateContactFragment extends Fragment {
 
         Bundle bundle = getArguments();
         assert bundle != null;
-        String strContac = bundle.getString("contact");
-        ContactFull contactFull = gson.fromJson(strContac, ContactFull.class);
+        strContac = bundle.getString("contact");
+        contactFull = gson.fromJson(strContac, ContactFull.class);
         loadContact(contactFull);
         setOnClick();
     }
 
-    private void serilize() {
+    private void serilize(Context context) {
         gson = new Gson();
-        updateContactPresent = new UpdateContactPresent();
+        updateContactPresent = new UpdateContactPresent(context, this);
     }
 
     private void initUI(View view) {
@@ -347,7 +353,7 @@ public class UpdateContactFragment extends Fragment {
         LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
         lnSelectTyp.setOnClickListener(show -> showDialog(typesAddress, tvType::setText));
         container.addView(childItem);
-        
+
     }
 
     private void addDoB(LinearLayout container, List<String> types) {
@@ -386,4 +392,73 @@ public class UpdateContactFragment extends Fragment {
         dialog.show(getParentFragmentManager(), "AddAttDialog");
     }
 
+    private List<Triple<String, String, Long>> collectAttribute(LinearLayout container, long idContact) {
+        List<Triple<String, String, Long>> listData = new ArrayList<>();
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View child = container.getChildAt(i);
+            String value = ((EditText) child.findViewById(R.id.et_input_att)).getText().toString().trim();
+            String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+            listData.add(new Triple<>(value, type, idContact));
+        }
+        return listData;
+    }
+
+    private List<Triple<String, String, Long>> collectAddressAttributes(long idContact) {
+        List<Triple<String, String, Long>> listData = new ArrayList<>();
+        for (int i = 0; i < lnAddAddress.getChildCount(); i++) {
+            View child = lnAddAddress.getChildAt(i);
+            String strProvince = ((EditText) child.findViewById(R.id.et_input_province)).getText().toString().trim();
+            String strDistrict = ((EditText) child.findViewById(R.id.et_input_district)).getText().toString().trim();
+            String strWard = ((EditText) child.findViewById(R.id.et_input_ward)).getText().toString().trim();
+            String strDetail = ((EditText) child.findViewById(R.id.et_input_detail)).getText().toString().trim();
+            String type = ((TextView) child.findViewById(R.id.child_type)).getText().toString().trim();
+
+            String fullAddress = strDetail + "\n" + strWard + "\n" + strDistrict + "\n" + strProvince;
+            listData.add(new Triple<>(type, fullAddress, idContact));
+        }
+        return listData;
+    }
+
+    private void updateContact() {
+        //phone number
+        List<Triple<String, String, Long>> listPhone = collectAttribute(lnAddPhone, contactFull.contact.getId());
+
+        //email
+        List<Triple<String, String, Long>> listEmail = collectAttribute(lnAddEmail, contactFull.contact.getId());
+
+        //nickname
+        List<Triple<String, String, Long>> listNickname = collectAttribute(lnAddNickname, contactFull.contact.getId());
+
+        //url
+        List<Triple<String, String, Long>> listURL = collectAttribute(lnAddURL, contactFull.contact.getId());
+
+        //address
+        List<Triple<String, String, Long>> listAddress = collectAddressAttributes(contactFull.contact.getId());
+
+        //DoB
+        List<Triple<String, String, Long>> listDoB = collectAttribute(lnAddDoB, contactFull.contact.getId());
+
+        //social
+        List<Triple<String, String, Long>> listSocial = collectAttribute(lnAddSocial, contactFull.contact.getId());
+
+        //message
+        List<Triple<String, String, Long>> listMessage = collectAttribute(lnAddMessage, contactFull.contact.getId());
+
+        String firstName = edtFirstName.getText().toString().trim();
+        String lastName = edtLastName.getText().toString().trim();
+        String company = edtCompany.getText().toString().trim();
+        String note = edtNote.getText().toString().trim();
+        Contact contact = new Contact(company, firstName, lastName, note);
+        contact.setId(contactFull.contact.getId());
+    }
+
+    @Override
+    public void updateContactSuccess() {
+
+    }
+
+    @Override
+    public void updateContactFail() {
+
+    }
 }
