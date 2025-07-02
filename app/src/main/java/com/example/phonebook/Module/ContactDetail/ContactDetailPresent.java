@@ -9,14 +9,42 @@ public class ContactDetailPresent implements ContactDetailContract.Present {
 
     ContactRepository contactRepository;
     Context context;
+    ContactDetailContract.View view;
 
-    public ContactDetailPresent( Context context) {
+    public ContactDetailPresent(Context context, ContactDetailContract.View view) {
         this.context = context;
         this.contactRepository = new ContactRepository(context);
+        this.view = view;
     }
 
     @Override
     public void updateFavorite(Favorite favorite) {
         contactRepository.updateFavorite(favorite);
+    }
+
+    @Override
+    public void callRequest(String phoneNumber) {
+        if (!phoneNumber.isEmpty()) {
+            view.requestCall(phoneNumber);
+        } else {
+            view.showErrorMessage("Please enter phone number");
+        }
+    }
+
+    @Override
+    public void sendMessage(String phoneNumber) {
+        if (!phoneNumber.isEmpty()) {
+            view.requestSendMessage(phoneNumber);
+        }
+    }
+
+    @Override
+    public void callVideo(String phoneNumber) {
+
+    }
+
+    @Override
+    public void sendEmail(String email) {
+
     }
 }

@@ -535,7 +535,7 @@
                             android:orientation="vertical" />
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_add_note"
+                            android:id="@+id/edt_update_note"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
