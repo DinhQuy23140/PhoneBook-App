@@ -1,5 +1,7 @@
 package com.example.phonebook.Module.UpdateContact;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -31,6 +33,7 @@ import com.example.phonebook.R;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -45,7 +48,7 @@ public class UpdateContactFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Gson gson;
-    TextView tvCancel;
+    TextView tvCancel, tvComplete;
     EditText edtFirstName, edtLastName, edtCompany, edtNote;
     LinearLayout lnAddPhone, lnAddEmail, lnAddNickname, lnAddURL, lnAddAddress, lnAddDoB, lnAddSocial, lnAddMessage;
     ImageView ivAddPhone, ivAddEmail, ivAddNickname, ivAddURL, ivAddAddress, ivAddDoB, ivAddSocial, ivAddMessage;
@@ -110,6 +113,7 @@ public class UpdateContactFragment extends Fragment {
 
     private void initUI(View view) {
         tvCancel = view.findViewById(R.id.tv_updatecontact_cancel);
+        tvComplete = view.findViewById(R.id.tv_updatecontact_complete);
 
         edtFirstName = view.findViewById(R.id.et_update_first_name);
         edtLastName = view.findViewById(R.id.et_update_last_name);
@@ -160,6 +164,39 @@ public class UpdateContactFragment extends Fragment {
         ivAddEmail.setOnClickListener(addEmail -> {
             List<String> typesEmail = Arrays.asList("di động", "nhà", "công ty", "trường học", "iPhone", "Apple Watch", "chính", "fax nhà riêng", "fax công ty", "máy nhắn tin", "khác");
             addAttribute(lnAddEmail, R.string.contact_email, typesEmail);
+        });
+
+        ivAddNickname.setOnClickListener(addNickName -> {
+            List<String> typesNickname = Arrays.asList("mẹ", "cha", "cha/mẹ", "anh(em)", "con trai", "con gái", "con", "bạn bè", "chồng (vợ)", "bạn đời", "trợ lý", "người quản lý", "khác");
+            addAttribute(lnAddNickname, R.string.contact_nickname, typesNickname);
+        });
+
+        ivAddURL.setOnClickListener(addURL -> {
+            List<String> typesURL = Arrays.asList("trang chủ", "nhà", "công ty", "trường học", "khác");
+            addAttribute(lnAddURL, R.string.contact_url, typesURL);
+        });
+
+        ivAddAddress.setOnClickListener(addAddresss -> {
+            List<String> typesAddress = Arrays.asList("trang chủ", "nhà", "công ty", "trường học", "khác");
+            addAddress(lnAddAddress, typesAddress);
+        });
+
+        ivAddDoB.setOnClickListener(addDoB -> {
+            List<String> typesDoB = Arrays.asList("lịch mặc định", "lịch trung quốc", "lịch do thái", "lịch hồi giáo");
+            addDoB(lnAddDoB, typesDoB);
+        });
+
+        ivAddSocial.setOnClickListener(addSocial -> {
+            List<String> typesSocial = Arrays.asList("Meet", "Teams", "YouTobe", "MoMo", "X", "Shopee", "TikTok", "Messenger",
+                    "Facebook", "Zalo", "Gmail", "Locket", "Duolingo", "Pinterest", "Outlook", "Threads", "Instagram", "Discord",
+                    "Twitch", "Linkedln", "Myspace", "Sina Weibo");
+            addAttribute(lnAddSocial, R.string.contact_social, typesSocial);
+        });
+
+        ivAddMessage.setOnClickListener(addMessage -> {
+            List<String> typesMessage = Arrays.asList("Meet", "Teams", "YouTobe", "MoMo", "X", "Shopee", "TikTok", "Messenger",
+                    "Facebook", "Zalo", "Gmail", "Locket", "Duolingo", "Pinterest", "Outlook", "Threads", "Instagram", "Discord", "Twitch", "Linkedln", "Myspace", "Sina Weibo");
+            addAttribute(lnAddMessage, R.string.contact_message, typesMessage);
         });
     }
 
@@ -297,6 +334,51 @@ public class UpdateContactFragment extends Fragment {
         edtInput.requestFocus();
         InputMethodManager inputMethod = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethod.showSoftInput(edtInput, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void addAddress(LinearLayout container, List<String> types) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.address, null);
+        TextView tvType = childItem.findViewById(R.id.child_type);
+        List<String> typesAddress = Arrays.asList("trang chủ", "nhà", "công ty", "trường học", "khác");
+        tvType.setText(typesAddress.get(0));
+        ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
+        ivDelete.setOnClickListener(delete -> container.removeView(childItem));
+        LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
+        lnSelectTyp.setOnClickListener(show -> showDialog(typesAddress, tvType::setText));
+        container.addView(childItem);
+        
+    }
+
+    private void addDoB(LinearLayout container, List<String> types) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        @SuppressLint("InflateParams") View childItem = inflater.inflate(R.layout.att_dob, null);
+        TextView tvType = childItem.findViewById(R.id.child_type);
+        tvType.setText(types.get(0));
+        TextView edtInput = childItem.findViewById(R.id.et_input_att);
+        edtInput.setHint(getString(R.string.contact_dob));
+        ImageView ivDelete = childItem.findViewById(R.id.add_btn_delete_phone);
+        ivDelete.setOnClickListener(delete -> container.removeView(childItem));
+        LinearLayout lnSelectTyp = childItem.findViewById(R.id.ln_select_type);
+        lnSelectTyp.setOnClickListener(show -> showDialog(types, tvType::setText));
+
+        edtInput.setOnClickListener(selectDOB -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    (datePicker, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        edtInput.setText(date);
+                    },
+                    year, month, day
+            );
+            datePickerDialog.show();
+        });
+        container.addView(childItem);
     }
 
     private void showDialog(List<String> types, AddContactFragment.TypeSelectionListener typeSelectionListener) {
