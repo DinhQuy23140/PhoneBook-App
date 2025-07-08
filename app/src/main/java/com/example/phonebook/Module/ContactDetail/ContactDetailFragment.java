@@ -38,6 +38,7 @@ import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
+import com.example.phonebook.Module.WebRTC.UI.LoginActivity;
 import com.example.phonebook.R;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -111,9 +112,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         contactFull = gson.fromJson(strContac, ContactFull.class);
         loadContactDetail(contactFull);
 
-        ivBack.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+        ivBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         tvEditContact.setOnClickListener(v -> {
             if (bundle != null) {
@@ -129,9 +128,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
             }
         });
 
-        tvDetaiFavourite.setOnClickListener(favo -> {
-            contactDetailPresent.updateFavorite(new Favorite(contactFull.contact.getId(), true));
-        });
+        tvDetaiFavourite.setOnClickListener(favo -> contactDetailPresent.updateFavorite(new Favorite(contactFull.contact.getId(), true)));
 
         ivCall.setOnClickListener(call -> {
             contactDetailPresent.callRequest(contactFull.phones.get(0).getNumber());
@@ -143,6 +140,11 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
         ivSentEmail.setOnClickListener(sendEmail -> {
             contactDetailPresent.sendEmail(contactFull.emails.get(0).getValue());
+        });
+
+        ivCallVideo.setOnClickListener(callVideo -> {
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+            startActivity(intent);
         });
 
     }

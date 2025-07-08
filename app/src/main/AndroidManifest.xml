@@ -25,6 +25,12 @@
         android:theme="@style/Theme.PhoneBook"
         tools:targetApi="31">
         <activity
+            android:name=".Module.WebRTC.UI.CallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Module.WebRTC.UI.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".Module.CallVideo.CallVideoActivity"
             android:exported="false" />
         <activity
@@ -32,7 +38,8 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

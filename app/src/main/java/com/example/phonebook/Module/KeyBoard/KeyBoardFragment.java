@@ -93,8 +93,8 @@ public class KeyBoardFragment extends Fragment implements KeyBoardContract.View{
         initUI(view);
         serialize();
 
-//        listNumber.clear();
-//        Collections.addAll(listNumber, "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#");
+        listNumber.clear();
+        Collections.addAll(listNumber, "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#");
         numberAdapter = new NumberAdapter(getContext(), listNumber, new OnclickListener() {
             @Override
             public void onClick(int position) {
