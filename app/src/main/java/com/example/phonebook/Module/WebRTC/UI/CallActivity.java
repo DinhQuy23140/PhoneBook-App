@@ -71,8 +71,8 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
             }else {
                 views.micButton.setImageResource(R.drawable.ic_baseline_mic_24);
             }
-            mainRepository.toggleAudio(isMicrophoneMuted);
             isMicrophoneMuted=!isMicrophoneMuted;
+            mainRepository.toggleAudio(isMicrophoneMuted);
         });
 
         views.videoButton.setOnClickListener(v->{
@@ -81,8 +81,8 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
             }else {
                 views.videoButton.setImageResource(R.drawable.ic_baseline_videocam_24);
             }
-            mainRepository.toggleVideo(isCameraMuted);
             isCameraMuted=!isCameraMuted;
+            mainRepository.toggleVideo(isCameraMuted);
         });
 
         views.endCallButton.setOnClickListener(v->{
