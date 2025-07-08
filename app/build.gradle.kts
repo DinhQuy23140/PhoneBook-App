@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.phonebook"
-        minSdk = 29
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -77,4 +77,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
+    implementation("com.mesibo.api:webrtc:1.0.5")
+    implementation("com.guolindev.permissionx:permissionx:1.6.1")
 }
