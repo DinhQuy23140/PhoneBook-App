@@ -47,8 +47,8 @@ public class MainRepository implements WebRTCClient.Listener {
         return instance;
     }
 
-    public void login(String username, Context context, SuccessCallBack callBack){
-        firebaseClient.login(username,()->{
+    public void login(String username, String phoneNumber, Context context, SuccessCallBack callBack){
+        firebaseClient.login(username, phoneNumber,()->{
             updateCurrentUsername(username);
             this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
                 @Override
