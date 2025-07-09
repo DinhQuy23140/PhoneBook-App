@@ -25,18 +25,22 @@
         android:theme="@style/Theme.PhoneBook"
         tools:targetApi="31">
         <activity
-            android:name=".Module.WebRTC.UI.CallActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="sensor"/>
-        <activity
-            android:name=".Module.WebRTC.UI.LoginActivity"
+            android:name=".Activity.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Module.WebRTC.UI.CallActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:screenOrientation="sensor" />
+        <activity
+            android:name=".Module.WebRTC.UI.LoginActivity"
+            android:exported="true">
         </activity>
         <activity
             android:name=".Module.CallVideo.CallVideoActivity"
@@ -47,8 +51,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

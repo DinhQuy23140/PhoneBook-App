@@ -13,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class FirebaseClient {
@@ -21,8 +23,11 @@ public class FirebaseClient {
     private String currentUsername;
     private static final String LATEST_EVENT_FIELD_NAME = "latest_event";
 
-    public void login(String username, SuccessCallBack callBack){
-        dbRef.child(username).setValue("").addOnCompleteListener(task -> {
+    public void login(String username, String phoneNumber, SuccessCallBack callBack){
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", username);
+        userData.put("phoneNumber", phoneNumber);
+        dbRef.child(username).setValue(userData).addOnCompleteListener(task -> {
             currentUsername = username;
             callBack.onSuccess();
         });
