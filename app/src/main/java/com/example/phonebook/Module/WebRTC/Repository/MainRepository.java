@@ -49,7 +49,7 @@ public class MainRepository implements WebRTCClient.Listener {
 
     public void login(String username, String phoneNumber, Context context, SuccessCallBack callBack){
         firebaseClient.login(username, phoneNumber,()->{
-            updateCurrentUsername(username);
+            updateCurrentUsername(phoneNumber);
             this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
                 @Override
                 public void onAddStream(MediaStream mediaStream) {
@@ -82,7 +82,7 @@ public class MainRepository implements WebRTCClient.Listener {
                     super.onIceCandidate(iceCandidate);
                     webRTCClient.sendIceCandidate(iceCandidate,target);
                 }
-            },username);
+            },phoneNumber);
             webRTCClient.listener = this;
             callBack.onSuccess();
         });
@@ -124,7 +124,6 @@ public class MainRepository implements WebRTCClient.Listener {
     public void subscribeForLatestEvent(NewEventCallBack callBack){
         firebaseClient.observeIncomingLatestEvent(model -> {
             switch (model.getType()){
-
                 case Offer:
                     this.target = model.getSender();
                     webRTCClient.onRemoteSessionReceived(new SessionDescription(
@@ -151,7 +150,6 @@ public class MainRepository implements WebRTCClient.Listener {
                     callBack.onNewEventReceived(model);
                     break;
             }
-
         });
     }
 
@@ -159,7 +157,6 @@ public class MainRepository implements WebRTCClient.Listener {
     @Override
     public void onTransferDataToOtherPeer(DataModel model) {
         firebaseClient.sendMessageToOtherUser(model,()->{
-
         });
     }
 
