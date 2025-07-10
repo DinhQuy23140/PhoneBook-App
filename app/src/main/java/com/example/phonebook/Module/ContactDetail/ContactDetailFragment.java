@@ -38,8 +38,10 @@ import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
+import com.example.phonebook.Module.WebRTC.UI.CallActivity;
 import com.example.phonebook.Module.WebRTC.UI.LoginActivity;
 import com.example.phonebook.R;
+import com.example.phonebook.Untilities.Constants;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +145,8 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         });
 
         ivCallVideo.setOnClickListener(callVideo -> {
-            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+            Intent intent = new Intent(requireActivity(), CallActivity.class);
+            intent.putExtra(Constants.KEY_FIELD_PHONE_NUMBER, contactFull.phones.get(0).getNumber());
             startActivity(intent);
         });
 

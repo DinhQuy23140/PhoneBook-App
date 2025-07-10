@@ -33,6 +33,7 @@ public class MainRepository implements WebRTCClient.Listener {
     private String target;
     private void updateCurrentUsername(String username){
         this.currentUsername = username;
+        firebaseClient.setCurrentUsername(username);
     }
 
     private MainRepository(){
@@ -49,43 +50,46 @@ public class MainRepository implements WebRTCClient.Listener {
 
     public void login(String username, String phoneNumber, Context context, SuccessCallBack callBack){
         firebaseClient.login(username, phoneNumber,()->{
-            updateCurrentUsername(phoneNumber);
-            this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
-                @Override
-                public void onAddStream(MediaStream mediaStream) {
-                    super.onAddStream(mediaStream);
-                    try{
-                        mediaStream.videoTracks.get(0).addSink(remoteView);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onConnectionChange(PeerConnection.PeerConnectionState newState) {
-                    Log.d("TAG", "onConnectionChange: "+newState);
-                    super.onConnectionChange(newState);
-                    if (newState == PeerConnection.PeerConnectionState.CONNECTED && listener!=null){
-                        listener.webrtcConnected();
-                    }
-
-                    if (newState == PeerConnection.PeerConnectionState.CLOSED ||
-                            newState == PeerConnection.PeerConnectionState.DISCONNECTED ){
-                        if (listener!=null){
-                            listener.webrtcClosed();
-                        }
-                    }
-                }
-
-                @Override
-                public void onIceCandidate(IceCandidate iceCandidate) {
-                    super.onIceCandidate(iceCandidate);
-                    webRTCClient.sendIceCandidate(iceCandidate,target);
-                }
-            },phoneNumber);
-            webRTCClient.listener = this;
             callBack.onSuccess();
         });
+    }
+
+    public void initWebRTCClient(Context context, String phoneNumber){
+        updateCurrentUsername(phoneNumber);
+        this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
+            @Override
+            public void onAddStream(MediaStream mediaStream) {
+                super.onAddStream(mediaStream);
+                try{
+                    mediaStream.videoTracks.get(0).addSink(remoteView);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onConnectionChange(PeerConnection.PeerConnectionState newState) {
+                Log.d("TAG", "onConnectionChange: "+newState);
+                super.onConnectionChange(newState);
+                if (newState == PeerConnection.PeerConnectionState.CONNECTED && listener!=null){
+                    listener.webrtcConnected();
+                }
+
+                if (newState == PeerConnection.PeerConnectionState.CLOSED ||
+                        newState == PeerConnection.PeerConnectionState.DISCONNECTED ){
+                    if (listener!=null){
+                        listener.webrtcClosed();
+                    }
+                }
+            }
+
+            @Override
+            public void onIceCandidate(IceCandidate iceCandidate) {
+                super.onIceCandidate(iceCandidate);
+                webRTCClient.sendIceCandidate(iceCandidate,target);
+            }
+        },phoneNumber);
+        webRTCClient.listener = this;
     }
 
     public void initLocalView(SurfaceViewRenderer view){

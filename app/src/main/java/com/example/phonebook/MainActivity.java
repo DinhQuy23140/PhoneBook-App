@@ -14,6 +14,8 @@ import com.example.phonebook.Module.Favorite.FavoriteFragment;
 import com.example.phonebook.Module.KeyBoard.KeyBoardFragment;
 import com.example.phonebook.Module.Person.PersonFragment;
 import com.example.phonebook.Module.Recent.RecentFragment;
+import com.example.phonebook.Module.WebRTC.Repository.MainRepository;
+import com.example.phonebook.Repository.ContactRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     RecentFragment recentFragment = new RecentFragment();
     KeyBoardFragment keyBoardFragment = new KeyBoardFragment();
     PersonFragment personFragment = new PersonFragment();
+    MainRepository mainRepository;
+    ContactRepository contactRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        serialize();
+        String phoneNumber = contactRepository.getPhone();
+        mainRepository.initWebRTCClient(this, phoneNumber);
 
         bottomNav = findViewById(R.id.bottom_navigation);
 
@@ -72,5 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.frame_container, fragment)
                 .commit();
+    }
+
+    private void serialize() {
+        mainRepository = MainRepository.getInstance();
+        contactRepository = new ContactRepository(this);
     }
 }
