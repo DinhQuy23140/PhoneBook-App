@@ -32,4 +32,5 @@ public class StartActivity extends AppCompatActivity {
             finish();
         }, 3000);
     }
+
 }

@@ -33,6 +33,7 @@ import com.example.phonebook.Model.Recent;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Room.AppDataBase;
+import com.example.phonebook.sharepreference.SharePrefManage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ContactRepository {
+    SharePrefManage sharePrefManage;
     ContactDAO contactDAO;
     PhoneNumberDAO phoneNumberDAO;
     EmailDAO emailDAO;
@@ -80,6 +82,7 @@ public class ContactRepository {
         this.messageDAO = appDataBase.messageDAO();
         this.favoriteDAO = appDataBase.favoriteDAO();
         this.recentDAO = appDataBase.recentDAO();
+        this.sharePrefManage = new SharePrefManage(context);
     }
 
     public void insertContact(Contact contact, CallBackInsert callBack) {
@@ -168,9 +171,7 @@ public class ContactRepository {
     }
 
     public void updateContact(Contact contact) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            contactDAO.updateContact(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getCompany(), contact.getNote());
-        });
+        Executors.newSingleThreadScheduledExecutor().execute(() -> contactDAO.updateContact(contact.getId(), contact.getFirstName(), contact.getLastName(), contact.getCompany(), contact.getNote()));
     }
 
     public void updatePhoneNumber(List<PhoneNumber> listPhoneNumber) {
@@ -227,5 +228,29 @@ public class ContactRepository {
             messageDAO.deleteMessage(listMessage.get(0).getContactId());
             messageDAO.insertMessage(listMessage);
         });
+    }
+
+    public void saveUserName(String userName) {
+        sharePrefManage.saveUsername(userName);
+    }
+
+    public void savePhoneNumber(String phoneNumber) {
+        sharePrefManage.savePhoneNumber(phoneNumber);
+    }
+
+    public void setLogin(boolean isLogin) {
+        sharePrefManage.setLogin(isLogin);
+    }
+
+    public String getUserName() {
+        return sharePrefManage.getUsername();
+    }
+
+    public String getPhone() {
+        return sharePrefManage.getPhoneNumber();
+    }
+
+    public boolean isLogin() {
+        return sharePrefManage.isLogin();
     }
 }

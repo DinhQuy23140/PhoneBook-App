@@ -28,5 +28,11 @@ public class SharePrefManage{
         return sharedPreferences.getString(Constants.KEY_FIELD_PHONE_NUMBER, "");
     }
 
+    public void setLogin(boolean isLogin) {
+        sharedPreferences.edit().putBoolean(Constants.KEY_IS_LOGIN, isLogin).apply();
+    }
 
+    public boolean isLogin() {
+        return sharedPreferences.getBoolean(Constants.KEY_IS_LOGIN, false);
+    }
 }
