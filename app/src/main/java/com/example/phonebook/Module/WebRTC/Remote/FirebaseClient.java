@@ -6,6 +6,7 @@ import com.example.phonebook.Module.WebRTC.Utils.DataModel;
 import com.example.phonebook.Module.WebRTC.Utils.ErrorCallBack;
 import com.example.phonebook.Module.WebRTC.Utils.NewEventCallBack;
 import com.example.phonebook.Module.WebRTC.Utils.SuccessCallBack;
+import com.example.phonebook.Untilities.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,10 +26,10 @@ public class FirebaseClient {
 
     public void login(String username, String phoneNumber, SuccessCallBack callBack){
         Map<String, Object> userData = new HashMap<>();
-        userData.put("username", username);
-        userData.put("phoneNumber", phoneNumber);
-        dbRef.child(username).setValue(userData).addOnCompleteListener(task -> {
-            currentUsername = username;
+        userData.put(Constants.KEY_FIELD_USERNAME, username);
+        userData.put(Constants.KEY_FIELD_PHONE_NUMBER, phoneNumber);
+        dbRef.child(phoneNumber).setValue(userData).addOnCompleteListener(task -> {
+            currentUsername = phoneNumber;
             callBack.onSuccess();
         });
     }
