@@ -34,7 +34,6 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
         EdgeToEdge.enable(this);
         views = ActivityCallBinding.inflate(getLayoutInflater());
         setContentView(views.getRoot());
-
         init();
     }
 
