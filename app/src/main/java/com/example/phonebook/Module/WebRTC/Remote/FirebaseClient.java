@@ -21,7 +21,7 @@ import java.util.Objects;
 public class FirebaseClient {
     private final Gson gson = new Gson();
     private final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-    private String currentUsername;
+//    private String currentUsername;
     private static final String LATEST_EVENT_FIELD_NAME = "latest_event";
 
     public void login(String username, String phoneNumber, SuccessCallBack callBack){
@@ -29,14 +29,14 @@ public class FirebaseClient {
         userData.put(Constants.KEY_FIELD_USERNAME, username);
         userData.put(Constants.KEY_FIELD_PHONE_NUMBER, phoneNumber);
         dbRef.child(phoneNumber).setValue(userData).addOnCompleteListener(task -> {
-            currentUsername = phoneNumber;
+//            currentUsername = phoneNumber;
             callBack.onSuccess();
         });
     }
 
-    public void setCurrentUsername(String username){
-        currentUsername = username;
-    }
+//    public void setCurrentUsername(String username){
+//        currentUsername = username;
+//    }
 
     public void sendMessageToOtherUser(DataModel dataModel, ErrorCallBack errorCallBack){
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -46,21 +46,22 @@ public class FirebaseClient {
                     //send the signal to other user
                     dbRef.child(dataModel.getTarget()).child(LATEST_EVENT_FIELD_NAME)
                             .setValue(gson.toJson(dataModel));
+                    errorCallBack.onError(false);
 
                 }else {
-                    errorCallBack.onError();
+                    errorCallBack.onError(true);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                errorCallBack.onError();
+                errorCallBack.onError(true);
             }
         });
     }
 
-    public void observeIncomingLatestEvent(NewEventCallBack callBack){
-        dbRef.child(currentUsername).child(LATEST_EVENT_FIELD_NAME).addValueEventListener(
+    public void observeIncomingLatestEvent(String senderName, NewEventCallBack callBack){
+        dbRef.child(senderName).child(LATEST_EVENT_FIELD_NAME).addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

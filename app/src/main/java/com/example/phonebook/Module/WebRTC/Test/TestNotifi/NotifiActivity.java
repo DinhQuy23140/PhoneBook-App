@@ -22,6 +22,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.phonebook.Module.WebRTC.UI.CallActivity;
 import com.example.phonebook.R;
 
 public class NotifiActivity extends AppCompatActivity {
@@ -58,6 +59,10 @@ public class NotifiActivity extends AppCompatActivity {
 
         @SuppressLint("RemoteViewLayout") RemoteViews customView = new RemoteViews(getPackageName(), R.layout.notification_incoming_call);
 
+        Intent intent = new Intent(this, CallActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
 // Intent cho nút "Trả lời"
         Intent acceptIntent = new Intent(this, MyActionReceiver.class);
         acceptIntent.setAction("ACTION_ACCEPT");
@@ -77,7 +82,8 @@ public class NotifiActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 .setAutoCancel(true)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setContentIntent(pendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         int notificationId = (int) System.currentTimeMillis(); // ID ngẫu nhiên theo thời gian

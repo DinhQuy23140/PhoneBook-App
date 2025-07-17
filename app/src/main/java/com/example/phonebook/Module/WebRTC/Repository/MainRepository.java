@@ -26,15 +26,15 @@ public class MainRepository implements WebRTCClient.Listener {
 
     private WebRTCClient webRTCClient;
 
-    private String currentUsername;
+//    private String currentUsername;
 
     private SurfaceViewRenderer remoteView;
 
     private String target;
-    private void updateCurrentUsername(String username){
-        this.currentUsername = username;
-        firebaseClient.setCurrentUsername(username);
-    }
+//    private void updateCurrentUsername(String username){
+//        this.currentUsername = username;
+//        firebaseClient.setCurrentUsername(username);
+//    }
 
     private MainRepository(){
         this.firebaseClient = new FirebaseClient();
@@ -55,7 +55,7 @@ public class MainRepository implements WebRTCClient.Listener {
     }
 
     public void initWebRTCClient(Context context, String phoneNumber){
-        updateCurrentUsername(phoneNumber);
+//        updateCurrentUsername(phoneNumber);
         this.webRTCClient = new WebRTCClient(context,new MyPeerConnectionObserver(){
             @Override
             public void onAddStream(MediaStream mediaStream) {
@@ -115,9 +115,9 @@ public class MainRepository implements WebRTCClient.Listener {
     public void toggleVideo(Boolean shouldBeMuted){
         webRTCClient.toggleVideo(shouldBeMuted);
     }
-    public void sendCallRequest(String target, ErrorCallBack errorCallBack){
+    public void sendCallRequest(String senderName, String target, ErrorCallBack errorCallBack){
         firebaseClient.sendMessageToOtherUser(
-                new DataModel(target,currentUsername,null, DataModelType.StartCall),errorCallBack
+                new DataModel(target,senderName,null, DataModelType.StartCall),errorCallBack
         );
     }
 
@@ -125,8 +125,8 @@ public class MainRepository implements WebRTCClient.Listener {
         webRTCClient.closeConnection();
     }
 
-    public void subscribeForLatestEvent(NewEventCallBack callBack){
-        firebaseClient.observeIncomingLatestEvent(model -> {
+    public void subscribeForLatestEvent(String senderName, NewEventCallBack callBack){
+        firebaseClient.observeIncomingLatestEvent(senderName, model -> {
             switch (model.getType()){
                 case Offer:
                     this.target = model.getSender();
@@ -160,7 +160,8 @@ public class MainRepository implements WebRTCClient.Listener {
 
     @Override
     public void onTransferDataToOtherPeer(DataModel model) {
-        firebaseClient.sendMessageToOtherUser(model,()->{
+        firebaseClient.sendMessageToOtherUser(model, error -> {
+
         });
     }
 

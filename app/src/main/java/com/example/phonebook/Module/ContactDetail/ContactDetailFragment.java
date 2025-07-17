@@ -37,10 +37,12 @@ import com.example.phonebook.Model.NickName;
 import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
+import com.example.phonebook.Module.CallVideo.CallVideoActivity;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
-import com.example.phonebook.Module.WebRTC.UI.CallActivity;
-import com.example.phonebook.Module.WebRTC.UI.LoginActivity;
+import com.example.phonebook.Module.WebRTC.Repository.MainRepository;
+import com.example.phonebook.Module.WebRTC.Utils.ErrorCallBack;
 import com.example.phonebook.R;
+import com.example.phonebook.Repository.ContactRepository;
 import com.example.phonebook.Untilities.Constants;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -61,6 +63,8 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
     RecyclerView rvContactEmail, rvContactNumber, rvNickName, rvURL, rvAddress, rvDoB, rvSocial, rvMessage;
     LinearLayout llAddEmail, llAddNumber, llAddNickName, llAddURL, llAddAddress, llAddDoB, llAddSocial, llAddMessage;
     ContactDetailPresent contactDetailPresent;
+    MainRepository mainRepository;
+    ContactRepository contactRepository;
     private static final int REQUEST_PERMISSIONS_CODE = 123, REQUEST_CALL = 1001;
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
@@ -113,6 +117,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         String strContac = bundle.getString("contact");
         contactFull = gson.fromJson(strContac, ContactFull.class);
         loadContactDetail(contactFull);
+        mainRepository.initWebRTCClient(getContext(), contactFull.phones.get(0).getNumber());
 
         ivBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -145,11 +150,19 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         });
 
         ivCallVideo.setOnClickListener(callVideo -> {
-            Intent intent = new Intent(requireActivity(), CallActivity.class);
-            intent.putExtra(Constants.KEY_FIELD_PHONE_NUMBER, contactFull.phones.get(0).getNumber());
-            startActivity(intent);
+            Intent intent = new Intent(requireActivity(), CallVideoActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_FIELD_PHONE_NUMBER, contactFull.phones.get(0).getNumber());
+            bundle.putString(Constants.KEY_CALL_VIDEO_TYPE, Constants.KEY_CALL_VIDEO_OUTGOING);
+            intent.putExtras(bundle);
+            mainRepository.sendCallRequest(contactRepository.getPhone(), contactFull.phones.get(0).getNumber(), error -> {
+                if (error) {
+                    Toast.makeText(getContext(), "couldnt find the target", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(intent);
+                }
+            });
         });
-
     }
 
     private void loadContactDetail(ContactFull contactFull) {
@@ -288,6 +301,8 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     private void serilize(Context context) {
         gson = new Gson();
+        mainRepository = MainRepository.getInstance();
+        contactRepository = new ContactRepository(context);
         contactDetailPresent = new ContactDetailPresent(context, this);
     }
 

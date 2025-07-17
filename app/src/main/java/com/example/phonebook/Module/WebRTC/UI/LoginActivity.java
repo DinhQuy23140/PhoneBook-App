@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private void isLogin() {
         boolean isLogin = contactRepository.isLogin();
         if (isLogin) {
-            Intent intent = new Intent(LoginActivity.this, CallActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
