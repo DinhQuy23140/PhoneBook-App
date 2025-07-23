@@ -15,8 +15,14 @@ import com.example.phonebook.Model.Contact;
 import com.example.phonebook.Module.WebRTC.Repository.MainRepository;
 import com.example.phonebook.R;
 import com.example.phonebook.Repository.ContactRepository;
+import com.example.phonebook.Untilities.Constants;
 import com.example.phonebook.databinding.ActivityLoginBinding;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.permissionx.guolindev.PermissionX;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
         contactRepository = new ContactRepository(this);
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(this);
         views.enterBtn.setOnClickListener(v -> {
             PermissionX.init(this)
                     .permissions(android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO)
@@ -45,10 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                             //login to firebase here
                             mainRepository.login(
                                     views.tvUsername.getText().toString(), views.tvPhoneNumber.getText().toString(), getApplicationContext(), () -> {
-                                        //if success then we want to move to call activity
-                                        contactRepository.saveUserName(views.tvUsername.getText().toString());
-                                        contactRepository.savePhoneNumber(views.tvPhoneNumber.getText().toString());
-                                        contactRepository.setLogin(true);
                                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                     }
                             );
@@ -60,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     private void isLogin() {
         boolean isLogin = contactRepository.isLogin();
         if (isLogin) {
-            Intent intent = new Intent(LoginActivity.this, CallActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }

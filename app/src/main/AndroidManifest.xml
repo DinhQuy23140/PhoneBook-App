@@ -13,8 +13,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -26,9 +25,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PhoneBook"
         tools:targetApi="31">
+        <activity
+            android:name=".Module.OnGoingCallVideo.OnGoingCallVideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Module.CallVideo.CallVideoDetailActivity"
+            android:exported="false" />
+
         <receiver android:name=".Module.WebRTC.Test.TestNotifi.MyActionReceiver" />
+
         <activity
             android:name=".Module.WebRTC.Test.TestNotifi.NotifiActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Activity.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,17 +47,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.StartActivity"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".Module.WebRTC.UI.CallActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="sensor" />
         <activity
             android:name=".Module.WebRTC.UI.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Module.CallVideo.CallVideoActivity"
             android:exported="false" />
@@ -58,6 +64,14 @@
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name=".Module.Notify.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

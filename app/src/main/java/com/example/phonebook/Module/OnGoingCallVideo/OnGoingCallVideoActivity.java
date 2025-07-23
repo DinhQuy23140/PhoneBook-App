@@ -1,4 +1,4 @@
-package com.example.phonebook.Module.WebRTC.Test.TestNotifi;
+package com.example.phonebook.Module.OnGoingCallVideo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.activity.EdgeToEdge;
@@ -22,29 +22,65 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.phonebook.Module.CallVideo.CallVideoActivity;
+import com.example.phonebook.Module.CallVideo.CallVideoDetailActivity;
+import com.example.phonebook.Module.WebRTC.Repository.MainRepository;
+import com.example.phonebook.Module.WebRTC.Test.TestNotifi.MyActionReceiver;
 import com.example.phonebook.Module.WebRTC.UI.CallActivity;
+import com.example.phonebook.Module.WebRTC.Utils.DataModel;
+import com.example.phonebook.Module.WebRTC.Utils.DataModelType;
+import com.example.phonebook.Module.WebRTC.Utils.NewEventCallBack;
 import com.example.phonebook.R;
+import com.example.phonebook.Untilities.Constants;
+import com.example.phonebook.databinding.ActivityOnGoingCallVideoBinding;
 
-public class NotifiActivity extends AppCompatActivity {
+public class OnGoingCallVideoActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "popup_channel";
-
+    ActivityOnGoingCallVideoBinding binding;
+    MainRepository mainRepository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_notifi);
+//        setContentView(R.layout.activity_on_going_call_video);
+        binding = ActivityOnGoingCallVideoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        createNotificationChannel(); // Tạo channel 1 lần duy nhất
-        Button btnNotify = findViewById(R.id.btn_notify);
-        btnNotify.setOnClickListener(v -> sendNotification());
+        //createNotificationChannel();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            Log.d("OnGoingCallVideoActivity", "bundle != null");
+            String targetName = bundle.getString(Constants.KEY_FIELD_PHONE_NUMBER);
+            binding.tvCallerName.setText(targetName);
+            mainRepository = MainRepository.getInstance(this);
+            mainRepository.initWebRTCClient(this, targetName);
+            //sendNotification();
+            String senderName = bundle.getString(Constants.KEY_SENDER_NAME);
+            Log.d("OnGoingCallVideoActivity", "senderName = " + senderName);
+            mainRepository.subscribeForLatestEvent(senderName, model -> {
+                Log.d("OnGoingCallVideoActivity", "model.getType() = " + model.getType());
+                if(model.getType() == DataModelType.StartCall) {
+                    runOnUiThread(() -> {
+                        Intent intent = new Intent(OnGoingCallVideoActivity.this, CallVideoActivity.class);
+                        startActivity(intent);
+                    });
+                }
+            });
+        } else {
+            Log.d("OnGoingCallVideoActivity", "bundle = null");
+        }
     }
 
+    void serilize() {
+    }
+
+    //notifi
     private void sendNotification() {
         // Kiểm tra quyền POST_NOTIFICATIONS trên Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -59,7 +95,7 @@ public class NotifiActivity extends AppCompatActivity {
 
         @SuppressLint("RemoteViewLayout") RemoteViews customView = new RemoteViews(getPackageName(), R.layout.notification_incoming_call);
 
-        Intent intent = new Intent(this, CallActivity.class);
+        Intent intent = new Intent(this, CallVideoDetailActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -89,7 +125,6 @@ public class NotifiActivity extends AppCompatActivity {
         int notificationId = (int) System.currentTimeMillis(); // ID ngẫu nhiên theo thời gian
         notificationManager.notify(notificationId, builder.build());
     }
-
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

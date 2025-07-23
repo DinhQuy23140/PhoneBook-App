@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.mediarouter)
     implementation(libs.legacy.support.v4)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -79,4 +80,5 @@ dependencies {
 
     implementation("com.mesibo.api:webrtc:1.0.5")
     implementation("com.guolindev.permissionx:permissionx:1.6.1")
+
 }

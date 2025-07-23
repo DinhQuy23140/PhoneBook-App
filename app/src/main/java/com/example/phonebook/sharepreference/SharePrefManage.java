@@ -35,4 +35,12 @@ public class SharePrefManage{
     public boolean isLogin() {
         return sharedPreferences.getBoolean(Constants.KEY_IS_LOGIN, false);
     }
+
+    public void saveToken(String token) {
+        sharedPreferences.edit().putString(Constants.KEY_FCM_TOKEN, token).apply();
+    }
+
+    public String getToken() {
+        return sharedPreferences.getString(Constants.KEY_FCM_TOKEN, "");
+    }
 }
