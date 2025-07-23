@@ -253,4 +253,12 @@ public class ContactRepository {
     public boolean isLogin() {
         return sharePrefManage.isLogin();
     }
+
+    public void saveToken(String token) {
+        sharePrefManage.saveToken(token);
+    }
+
+    public String getToken() {
+        return sharePrefManage.getToken();
+    }
 }

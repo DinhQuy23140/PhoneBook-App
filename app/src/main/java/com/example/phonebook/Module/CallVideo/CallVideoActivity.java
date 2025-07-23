@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -27,6 +28,7 @@ public class CallVideoActivity extends AppCompatActivity implements MainReposito
     private Boolean isCameraMuted = false;
     private Boolean isMicrophoneMuted = false;
     ContactRepository contactRepository;
+    String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,27 +45,27 @@ public class CallVideoActivity extends AppCompatActivity implements MainReposito
     }
 
     void init(){
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        int idNotification = bundle.getInt(Constants.KEY_ID_NOTIFICATION);
+        if (idNotification != -1) {
+            NotificationManagerCompat.from(this).cancel(idNotification);
+        }
+        type = bundle.getString(Constants.KEY_CALL_VIDEO_TYPE);
         contactRepository = new ContactRepository(this);
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(this);
         mainRepository.initWebRTCClient(this, contactRepository.getPhone());
         mainRepository.listener = this;
-//        Bundle bundle = getIntent().getExtras();
-//        String typeCallVideo = bundle.getString(Constants.KEY_CALL_VIDEO_TYPE);
-//        switch (typeCallVideo) {
-//            case Constants.KEY_CALL_VIDEO_OUTGOING:{
-//                Toast.makeText(this, Constants.KEY_CALL_VIDEO_OUTGOING, Toast.LENGTH_SHORT).show();
-//                initOutGoing();
-//                break;
-//            }
-//            case Constants.KEY_CALL_VIDEO_INCOMING: {
-//                initInComing();
-//                break;
-//            }
-//        };
         mainRepository.initLocalView(activityCallVideoBinding.localView);
         mainRepository.initRemoteView(activityCallVideoBinding.remoteView);
         mainRepository.subscribeForLatestEvent(contactRepository.getPhone(), data->{
-            mainRepository.startCall(data.getSender());
+            if (type == Constants.KEY_CALL_VIDEO_INCOMING){
+                mainRepository.startCall(data.getSender());
+            } else {
+                if (data.getType() == DataModelType.StartCall){
+                    mainRepository.startCall(data.getSender());
+                }
+            }
         });
 
         activityCallVideoBinding.switchCameraButton.setOnClickListener(v->{

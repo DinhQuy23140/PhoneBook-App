@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.phonebook.Module.CallVideo.CallVideoActivity;
+import com.example.phonebook.Module.CallVideo.CallVideoDetailActivity;
 import com.example.phonebook.Module.Favorite.FavoriteFragment;
 import com.example.phonebook.Module.KeyBoard.KeyBoardFragment;
 import com.example.phonebook.Module.Person.PersonFragment;
@@ -38,7 +39,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String CHANNEL_ID = "popup_channel";
+    public static final String CHANNEL_ID = "popup_channel";
     BottomNavigationView bottomNav;
     FavoriteFragment favoriteFragment = new FavoriteFragment();
     RecentFragment recentFragment = new RecentFragment();
@@ -92,9 +93,7 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(keyBoardFragment);
         mainRepository.subscribeForLatestEvent(contactRepository.getPhone(),data->{
             if (data.getType()== DataModelType.StartCall){
-                runOnUiThread(()->{
-                    sendNotification();
-                });
+                runOnUiThread(this::sendNotification);
             }
         });
     }
@@ -107,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void serialize() {
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(this);
         contactRepository = new ContactRepository(this);
     }
 
     //notifi
-    private void sendNotification() {
+    public void sendNotification() {
         // Kiểm tra quyền POST_NOTIFICATIONS trên Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
@@ -125,26 +124,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @SuppressLint("RemoteViewLayout") RemoteViews customView = new RemoteViews(getPackageName(), R.layout.notification_incoming_call);
-
-        Intent intent = new Intent(this, CallVideoActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_CALL_VIDEO_TYPE,Constants.KEY_CALL_VIDEO_INCOMING);
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        int notificationId = (int) System.currentTimeMillis(); // ID ngẫu nhiên theo thời gian
+        bundle.putInt(Constants.KEY_ID_NOTIFICATION, notificationId);
 
-// Intent cho nút "Trả lời"
-        Intent acceptIntent = new Intent(this, CallVideoActivity.class);
-        bundle.putString(Constants.KEY_CALL_VIDEO_TYPE,Constants.KEY_CALL_VIDEO_INCOMING);
+        Intent intent = new Intent(MainActivity.this, CallVideoDetailActivity.class);
         intent.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        customView.setOnClickPendingIntent(R.id.notification_layout, pendingIntent);
+
+        Intent acceptIntent = new Intent(MainActivity.this, CallVideoActivity.class);
+        acceptIntent.putExtras(bundle);
         acceptIntent.setAction("ACTION_ACCEPT");
-        PendingIntent acceptPendingIntent = PendingIntent.getBroadcast(this, 0, acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent acceptPendingIntent = PendingIntent.getActivity(
+                this,
+                1,
+                acceptIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
         customView.setOnClickPendingIntent(R.id.btn_accept, acceptPendingIntent);
 
 // Intent cho nút "Từ chối"
         Intent declineIntent = new Intent(this, MyActionReceiver.class);
         declineIntent.setAction("ACTION_DECLINE");
-        PendingIntent declinePendingIntent = PendingIntent.getBroadcast(this, 1, declineIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent declinePendingIntent = PendingIntent.getBroadcast(this, 2, declineIntent, PendingIntent.FLAG_IMMUTABLE);
         customView.setOnClickPendingIntent(R.id.btn_decline, declinePendingIntent);
 
         // Notification với layout tùy chỉnh
@@ -158,11 +167,10 @@ public class MainActivity extends AppCompatActivity {
                 .setContentIntent(pendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        int notificationId = (int) System.currentTimeMillis(); // ID ngẫu nhiên theo thời gian
         notificationManager.notify(notificationId, builder.build());
     }
 
-    private void createNotificationChannel() {
+    public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Thông báo nổi";
             String description = "Hiển thị thông báo popup có hành động";

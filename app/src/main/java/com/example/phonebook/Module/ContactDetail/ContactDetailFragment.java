@@ -38,6 +38,7 @@ import com.example.phonebook.Model.PhoneNumber;
 import com.example.phonebook.Model.Social;
 import com.example.phonebook.Model.URL;
 import com.example.phonebook.Module.CallVideo.CallVideoActivity;
+import com.example.phonebook.Module.OnGoingCallVideo.OnGoingCallVideoActivity;
 import com.example.phonebook.Module.UpdateContact.UpdateContactFragment;
 import com.example.phonebook.Module.WebRTC.Repository.MainRepository;
 import com.example.phonebook.Module.WebRTC.Utils.ErrorCallBack;
@@ -153,6 +154,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
             Intent intent = new Intent(requireActivity(), CallVideoActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_FIELD_PHONE_NUMBER, contactFull.phones.get(0).getNumber());
+            bundle.putString(Constants.KEY_SENDER_NAME, contactRepository.getPhone());
             bundle.putString(Constants.KEY_CALL_VIDEO_TYPE, Constants.KEY_CALL_VIDEO_OUTGOING);
             intent.putExtras(bundle);
             mainRepository.sendCallRequest(contactRepository.getPhone(), contactFull.phones.get(0).getNumber(), error -> {
@@ -301,7 +303,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     private void serilize(Context context) {
         gson = new Gson();
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(getContext());
         contactRepository = new ContactRepository(context);
         contactDetailPresent = new ContactDetailPresent(context, this);
     }

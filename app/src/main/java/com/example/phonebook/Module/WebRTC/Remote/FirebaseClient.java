@@ -47,7 +47,6 @@ public class FirebaseClient {
                     dbRef.child(dataModel.getTarget()).child(LATEST_EVENT_FIELD_NAME)
                             .setValue(gson.toJson(dataModel));
                     errorCallBack.onError(false);
-
                 }else {
                     errorCallBack.onError(true);
                 }
@@ -59,6 +58,8 @@ public class FirebaseClient {
             }
         });
     }
+
+
 
     public void observeIncomingLatestEvent(String senderName, NewEventCallBack callBack){
         dbRef.child(senderName).child(LATEST_EVENT_FIELD_NAME).addValueEventListener(

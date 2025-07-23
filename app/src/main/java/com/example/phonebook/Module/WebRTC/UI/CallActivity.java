@@ -50,7 +50,7 @@ public class CallActivity extends AppCompatActivity implements MainRepository.Li
     private void init(){
         createNotificationChannel(); // Tạo channel 1 lần duy nhất
         contactRepository = new ContactRepository(this);
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(this);
         mainRepository.initWebRTCClient(this, contactRepository.getPhone());
 
         Intent getPhoneIntent = getIntent();
